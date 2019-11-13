@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CalendarScheduler.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CalendarScheduler.Controllers
 {
+    [Authorize]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;

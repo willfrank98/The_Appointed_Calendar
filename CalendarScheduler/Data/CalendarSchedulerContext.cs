@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace CalendarScheduler.Models
+{
+    public class CalendarSchedulerContext : DbContext
+    {
+        public CalendarSchedulerContext (DbContextOptions<CalendarSchedulerContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<CalendarScheduler.Models.Appointment> Appointment { get; set; }
+    }
+}
