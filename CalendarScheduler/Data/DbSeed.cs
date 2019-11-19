@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CalendarScheduler.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CalendarScheduler.Data
@@ -12,7 +13,8 @@ namespace CalendarScheduler.Data
     {
         public static void Initialize(CalendarSchedulerContext context, CalendarUserContext userContext, IServiceProvider serviceProvider)
         {
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
+            context.Database.Migrate();
 
             if (context.Appointment.Any()) return;
 
@@ -27,7 +29,8 @@ namespace CalendarScheduler.Data
             }
             context.SaveChanges();
 
-            userContext.Database.EnsureCreated();
+            //userContext.Database.EnsureCreated();
+            userContext.Database.Migrate();
             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
             var users = new IdentityUser[]
