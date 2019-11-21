@@ -14,7 +14,7 @@ namespace CalendarScheduler
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
             var host = CreateHostBuilder(args).Build();
             using(var scope = host.Services.CreateScope())
@@ -24,7 +24,7 @@ namespace CalendarScheduler
                 {
                     var context = services.GetRequiredService<CalendarSchedulerContext>();
                     var ucontext = services.GetRequiredService<CalendarUserContext>();
-                    DbSeed.Initialize(context, ucontext, services);
+                    await DbSeed.InitializeAsync(context, ucontext, services);
                 }
                 catch(Exception e)
                 {

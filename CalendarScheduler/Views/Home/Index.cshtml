@@ -1,13 +1,78 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
 }
 
 <div class="text-center">
     <h1 class="display-4">Calendar</h1>
 </div>
+<div>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#addModal">+ Appointment</button>
+</div>
 
-<div id="calendar"></div>
+<div class="container" id="calendar"></div>
+
+<div id="addModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <input type="text" name="Title" class="form-control" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="Location" class="form-control" placeholder="Location" />
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="Description" placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="starttime">Start Time</label>
+                        <input type="datetime-local" name="StartTime" id="starttime" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="endtime">End Time</label>
+                        <input type="datetime-local" name="EndTime" id="endtime" class="form-control" />
+                    </div>
+                    <label>Recurrence</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio1" name="Recurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio1">Daily</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio2" name="Recurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio2">Weekly</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio3" name="Recurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio3">Monthly</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="add-form-submit" type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
+	<script type="text/javascript">
+
+        $(document).ready( function () {
+
+
+            $("#add-form-submit").on('click', function () {
+                //TODO handle form submit and validation
+            })
+        });
+	</script>
 	<script src="~/js/callendar.js" asp-append-version="true"></script>
 }

@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CalendarScheduler</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://unpkg.com/@@fullcalendar/core@@4.3.1/main.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/@@fullcalendar/daygrid@@4.3.0/main.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@@fullcalendar/daygrid@@4.3.0/main.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@@fullcalendar/timegrid@@4.3.0/main.min.css" />
 </head>
 <body>
     <header>
@@ -22,9 +24,6 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
@@ -47,7 +46,9 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 	<script src="https://unpkg.com/@@fullcalendar/core@@4.3.1/main.min.js"></script>
+	<script src="https://unpkg.com/@@fullcalendar/interaction@@4.3.1/main.min.js"></script>
 	<script src="https://unpkg.com/@@fullcalendar/daygrid@@4.3.0/main.min.js"></script>
+	<script src="https://unpkg.com/@@fullcalendar/timegrid@@4.3.0/main.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
