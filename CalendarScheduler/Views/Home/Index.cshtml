@@ -9,15 +9,5 @@
 <div id="calendar"></div>
 
 @section Scripts {
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'dayGrid' ]
-        });
-
-        calendar.render();
-      });
-	</script>
+	<script src="~/js/callendar.js" asp-append-version="true"></script>
 }
