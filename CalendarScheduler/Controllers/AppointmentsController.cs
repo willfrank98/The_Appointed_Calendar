@@ -28,6 +28,13 @@ namespace CalendarScheduler.Controllers
             return View(await calendarSchedulerContext.ToListAsync());
         }
 
+        public JsonResult GetAppointments()
+        {
+            var appointments = _context.Appointment.ToList();
+
+            return Json(appointments);
+        }
+
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
