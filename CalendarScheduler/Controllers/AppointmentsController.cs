@@ -15,6 +15,7 @@ namespace CalendarScheduler.Controllers
     public class AppointmentsController : Controller
     {
         private readonly CalendarSchedulerContext _context;
+		//private CalendarSchedulerContext db = new CalendarSchedulerContext();
 
         public AppointmentsController(CalendarSchedulerContext context)
         {
@@ -70,7 +71,7 @@ namespace CalendarScheduler.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(appointment);
+                _context.Appointment.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -111,8 +112,8 @@ namespace CalendarScheduler.Controllers
             {
                 try
                 {
-                    _context.Update(appointment);
-                    await _context.SaveChangesAsync();
+					_context.Appointment.Update(appointment);
+					await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

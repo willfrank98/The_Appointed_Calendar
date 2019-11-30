@@ -17,6 +17,7 @@ namespace CalendarScheduler.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Location { get; set; }
+		//public string Category { get; set; }
         [Required]
         public DateTime StartTime { get; set; }
         [Required]

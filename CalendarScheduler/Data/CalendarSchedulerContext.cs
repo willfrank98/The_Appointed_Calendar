@@ -13,6 +13,6 @@ namespace CalendarScheduler.Models
         {
         }
 
-        public DbSet<CalendarScheduler.Models.Appointment> Appointment { get; set; }
+        public DbSet<Appointment> Appointment { get; set; }
     }
 }
