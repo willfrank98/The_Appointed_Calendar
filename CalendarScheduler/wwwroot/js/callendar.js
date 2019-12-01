@@ -1,50 +1,54 @@
 ﻿// If we declare the events up here, it should be able to be accessed by all the functions.
+var events = []
+var calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-			plugins: ['dayGrid', 'timeGrid', 'interaction'],
-			selectable: true,
-			editable: true,
-			nowIndicator: true,
-			header: {
-				left: 'prevYear,prev,next,nextYear today',
-				center: 'title',
-				right: 'dayGridMonth,timeGridWeek,timeGridDay'
-			},
-			dateClick: function (info) {
-				//alert('clicked ' + info.dateStr);
-			},
-			events: getAppointments(),
+    calendar = new FullCalendar.Calendar(calendarEl, {
+		plugins: ['dayGrid', 'timeGrid', 'interaction'],
+		selectable: true,
+		editable: true,
+		nowIndicator: true,
+		header: {
+			left: 'prevYear,prev,next,nextYear today',
+			center: 'title',
+			right: 'dayGridMonth,timeGridWeek,timeGridDay'
+		},
+		dateClick: function (info) {
+			//alert('clicked ' + info.dateStr);
+		},
+		events: [],
 
-        });
+    });
 
-        calendar.render();
+    getAppointments();
+
+    calendar.render();
 });
 
 function getAppointments() {
-	var events = [];
     $.ajax({
         url: '/Appointments/GetAppointments',
         method: 'GET'
     }).done(function (data) {
         data.forEach(function (el) {
-            events.push({
-                id: data.Id,
-                title: data.Title,
-                startTime: data.StartTime,
-                endTime: data.EndTime,
+            var ev = {
+                id: el.appointmentId,
+                title: el.title,
+                start: new Date(el.startTime),
+                end: new Date(el.endTime),
                 editable: true,
-                description: data.Description,
-                location: data.Location,
-                recurrence: data.Recurrence,
-                created: data.Created,
-                modified: data.Modified,
-                userId: data.UserId
-            })
-		})
-		return events;
+                description: el.description,
+                location: el.location,
+                recurrence: el.recurrence,
+                created: el.created,
+                modified: el.modified,
+                userId: el.userId
+            }
+            calendar.addEvent(ev)
+        })
+        calendar.render();
     }).fail(function (error) {
         alert("Error getting appointments");
     })
@@ -79,4 +83,12 @@ function updateAppointment(appoint) {
         method: 'POST',
         data: formatted_appointment
     })
+}
+
+function parseDate(date) {
+    return date.split("T")[0]
+}
+
+function parseTime(date) {
+    return date.split("T")[1]
 }

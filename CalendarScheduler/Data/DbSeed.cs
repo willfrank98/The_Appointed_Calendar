@@ -49,7 +49,7 @@ namespace CalendarScheduler.Data
             {
                 context.Appointment.Add(a);
             }
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return;
         }
