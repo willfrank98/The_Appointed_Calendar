@@ -16,7 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			right: 'dayGridMonth,timeGridWeek,timeGridDay'
 		},
 		dateClick: function (info) {
-			//alert('clicked ' + info.dateStr);
+			// if right click
+			if (info.jsEvent.which == 3) {
+				showDateContext();
+			}
+		},
+		eventClick: function (info) {
+			// if right click
+			if (info.jsEvent.which == 3) {
+				showEventContext();
+			}
 		},
 		events: [],
 
@@ -24,8 +33,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     getAppointments();
 
-    calendar.render();
+	calendar.render();
+
+	$('div.fc-row').contextmenu((data) => {
+		if (data.which == 3) {
+			showDateContext();
+		}
+	});
 });
+
+function showDateContext() {
+	alert("right clicked a date");
+}
+
+function showEventContext() {
+	alert("right clicked a event");
+
+}
 
 function getAppointments() {
     $.ajax({
