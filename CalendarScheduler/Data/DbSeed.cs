@@ -15,7 +15,7 @@ namespace CalendarScheduler.Data
         {
 
             //userContext.Database.EnsureCreated();
-            //userContext.Database.Migrate();
+            userContext.Database.Migrate();
 
             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
@@ -32,7 +32,7 @@ namespace CalendarScheduler.Data
             }
 
             //context.Database.EnsureCreated();
-            //context.Database.Migrate();
+            context.Database.Migrate();
 
             string uid = await UserManager.GetUserIdAsync(users.First());
 

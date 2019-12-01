@@ -29,7 +29,7 @@ namespace CalendarScheduler
             services.AddRazorPages();
 
 		    services.AddDbContext<CalendarSchedulerContext>(options =>
-		            options.UseSqlServer(Configuration.GetConnectionString("CalendarSchedulerContext")));
+					options.UseSqlServer(Configuration.GetConnectionString("CalendarSchedulerContext")));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +38,7 @@ namespace CalendarScheduler
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+				app.UseBrowserLink();
 			}
 			else
 			{
@@ -58,7 +59,6 @@ namespace CalendarScheduler
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-
-        }
+		}
 	}
 }

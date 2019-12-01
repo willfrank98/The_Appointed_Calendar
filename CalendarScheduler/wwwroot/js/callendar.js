@@ -1,17 +1,30 @@
 ﻿// If we declare the events up here, it should be able to be accessed by all the functions.
-var events = [];
 
 document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-		    plugins: [ 'dayGrid' ]
+			plugins: ['dayGrid', 'timeGrid', 'interaction'],
+			selectable: true,
+			editable: true,
+			nowIndicator: true,
+			header: {
+				left: 'prevYear,prev,next,nextYear today',
+				center: 'title',
+				right: 'dayGridMonth,timeGridWeek,timeGridDay'
+			},
+			dateClick: function (info) {
+				//alert('clicked ' + info.dateStr);
+			},
+			events: getAppointments(),
+
         });
 
         calendar.render();
 });
 
 function getAppointments() {
+	var events = [];
     $.ajax({
         url: '/Appointments/GetAppointments',
         method: 'GET'
@@ -30,24 +43,25 @@ function getAppointments() {
                 modified: data.Modified,
                 userId: data.UserId
             })
-        })
+		})
+		return events;
     }).fail(function (error) {
         alert("Error getting appointments");
     })
 }
 
 function createAppointment(appoint) {
-    $.ajax({
-        url: '/Appointments/Create',
-        method: 'POST',
-        data: appoint
-    }).done(function () {
-        events.push({
+	$.ajax({
+		url: '/Appointments/Create',
+		method: 'POST',
+		data: appoint
+	}).done(function () {
+		events.push({
 
-        })
-    }).fail(function (error) {
-        alert("Error creating appointment")
-    }
+		})
+	}).fail(function (error) {
+		alert("Error creating appointment");
+	});
 }
 
 // Takes in an existing appointment object and passes it to the server to save to the database
