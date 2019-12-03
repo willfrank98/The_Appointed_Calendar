@@ -24,6 +24,7 @@
             </div>
             <div class="modal-body">
                 <form id="addForm">
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         <input type="text" name="Title" class="form-control" placeholder="Title" />
                     </div>
@@ -73,6 +74,11 @@
             $("#add-form-submit").on('click', function () {
                 //TODO handle form submit and validation
             })
+
+            $("input[type='datetime-local']").flatpickr({
+                enableTime: true,
+                dateFormat: "m/d/Y h:i K"
+            });
         });
 	</script>
 	<script src="~/js/fullcalendar-rightclick.js"></script>
