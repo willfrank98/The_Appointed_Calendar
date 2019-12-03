@@ -49,7 +49,8 @@ namespace CalendarScheduler.Data
             {
                 context.Appointment.Add(a);
             }
-            await context.SaveChangesAsync();
+            var x = await context.SaveChangesAsync();
+			//context.Database.
 
             return;
         }
