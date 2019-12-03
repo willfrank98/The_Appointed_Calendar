@@ -25,21 +25,21 @@
             <div class="modal-body">
                 <form id="addForm">
                     <div class="form-group">
-                        <input type="text" name="Title" class="form-control" placeholder="Title" />
+                        <input type="text" id="addTitle" name="Title" class="form-control" placeholder="Title" />
                     </div>
                     <div class="form-group">
-                        <input type="text" name="Location" class="form-control" placeholder="Location" />
+                        <input type="text" id="addLocation" name="Location" class="form-control" placeholder="Location" />
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" name="Description" placeholder="Description"></textarea>
+                        <textarea class="form-control" id="addDescription" name="Description" placeholder="Description"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="starttime">Start Time</label>
-                        <input type="datetime-local" name="StartTime" id="starttime" class="form-control" />
+                        <input type="datetime-local" name="StartTime" id="starttime" value="2019-12-03T12:00:00" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="endtime">End Time</label>
-                        <input type="datetime-local" name="EndTime" id="endtime" class="form-control" />
+                        <input type="datetime-local" name="EndTime" id="endtime" value="2019-12-04T12:00:00" class="form-control" />
                     </div>
                     <label>Recurrence</label>
                     <div class="custom-control custom-radio custom-control-inline">
@@ -65,16 +65,6 @@
 </div>
 
 @section Scripts {
-	<script type="text/javascript">
-
-        $(document).ready( function () {
-
-
-            $("#add-form-submit").on('click', function () {
-                //TODO handle form submit and validation
-            })
-        });
-	</script>
-	<script src="~/js/fullcalendar-rightclick.js"></script>
-	<script src="~/js/callendar.js" asp-append-version="true"></script>
+    <script src="~/js/fullcalendar-rightclick.js"></script>
+    <script src="~/js/callendar.js" asp-append-version="true"></script>
 }

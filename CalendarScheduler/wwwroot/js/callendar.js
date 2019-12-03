@@ -39,7 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (data.which == 3) {
 			showDateContext();
 		}
-	});
+    });
+
+    $("#add-form-submit").on('click', function () {
+        var appointment = {}
+        appointment.title = $("#addTitle").val();
+        appointment.location = $("#addLocation").val();
+        appointment.description = $("#addDescription").val();
+        appointment.startTime = $("#starttime").val();
+        appointment.endTime = $("#endtime").val();
+        createAppointment(appointment);
+    })
 });
 
 function showDateContext() {
@@ -79,14 +89,32 @@ function getAppointments() {
 }
 
 function createAppointment(appoint) {
-	$.ajax({
-		url: '/Appointments/Create',
-		method: 'POST',
-		data: appoint
-	}).done(function () {
-		events.push({
-
-		})
+    $.ajax({
+        url: '/Appointments/Create',
+        method: 'POST',
+        dataType: "json",
+        data: {
+            Title: appoint.title,
+            Location: appoint.location,
+            Description: appoint.description,
+            StartTime: appoint.startTime,
+            EndTime: appoint.endTime
+        }
+    }).done(function (data) {
+        var ev = {
+            id: data.appointmentId,
+            title: data.title,
+            start: new Date(data.startTime),
+            end: new Date(data.endTime),
+            editable: true,
+            description: data.description,
+            location: data.location,
+            recurrence: data.recurrence,
+            created: data.created,
+            modified: data.modified,
+            userId: data.userId
+        }
+		calendar.addEvent(ev)
 	}).fail(function (error) {
 		alert("Error creating appointment");
 	});

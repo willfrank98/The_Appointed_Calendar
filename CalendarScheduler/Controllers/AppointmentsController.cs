@@ -66,17 +66,23 @@ namespace CalendarScheduler.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Reccurence,Created,Modified,UserId")] Appointment appointment)
+        //[ValidateAntiForgeryToken]
+        public async Task<JsonResult> Create(String Title, String Location, String Description, String StartTime, String EndTime)
         {
+            Appointment appointment = new Appointment();
+            appointment.Description = Description;
+            appointment.Title = Title;
+            appointment.Location = Location;
+            appointment.StartTime = DateTime.Parse(StartTime);
+            appointment.EndTime = DateTime.Parse(EndTime);
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return new JsonResult(appointment);
             }
-            ViewData["UserId"] = new SelectList(_context.Set<IdentityUser>(), "Id", "Id", appointment.UserId);
-            return View(appointment);
+            //ViewData["UserId"] = new SelectList(_context.Set<IdentityUser>(), "Id", "Id", appointment.UserId);
+            return new JsonResult(appointment);
         }
 
         // GET: Appointments/Edit/5
