@@ -24,6 +24,7 @@
             </div>
             <div class="modal-body">
                 <form id="addForm">
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         <input type="text" id="addTitle" name="Title" class="form-control" placeholder="Title" />
                     </div>
@@ -65,6 +66,21 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/fullcalendar-rightclick.js"></script>
-    <script src="~/js/callendar.js" asp-append-version="true"></script>
+	<script src="~/js/fullcalendar-rightclick.js"></script>
+	<script src="~/js/callendar.js" asp-append-version="true"></script>
+	<script type="text/javascript">
+
+        $(document).ready( function () {
+
+
+            $("#add-form-submit").on('click', function () {
+                //TODO handle form submit and validation
+            })
+
+            $("input[type='datetime-local']").flatpickr({
+                enableTime: true,
+                dateFormat: "m/d/Y h:i K"
+            });
+        });
+	</script>
 }
