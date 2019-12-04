@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             addButton: {
                 text: 'Add Appointment',
                 click: function () {
+                    $("#addForm").trigger('reset');
                     $("#addModal").modal('show');
                 }
             }

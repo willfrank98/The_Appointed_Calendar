@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CalendarScheduler.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace CalendarScheduler.Controllers
 {
@@ -15,10 +16,16 @@ namespace CalendarScheduler.Controllers
     public class AppointmentsController : Controller
     {
         private readonly CalendarSchedulerContext _context;
+        private UserManager<IdentityUser> _userManager;
+        private String _currentUserId;
+        private IHttpContextAccessor _httpContext;
 
-        public AppointmentsController(CalendarSchedulerContext context)
+        public AppointmentsController(CalendarSchedulerContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContext)
         {
             _context = context;
+            _userManager = userManager;
+            _httpContext = httpContext;
+            _currentUserId = _userManager.GetUserId(httpContext.HttpContext.User);
         }
 
         // GET: Appointments
@@ -74,6 +81,8 @@ namespace CalendarScheduler.Controllers
             appointment.Location = Location;
             appointment.StartTime = DateTime.Parse(StartTime);
             appointment.EndTime = DateTime.Parse(EndTime);
+            appointment.UserId = _currentUserId;
+            appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
