@@ -209,3 +209,11 @@ function parseDate(date) {
 function parseTime(date) {
 	return date.split("T")[1]
 }
+
+function validateRequired(el) {
+    if ($(el).val() == "") {
+        $(el).css("border-color", "red");
+    } else {
+        $(el).css("border-color", "#dee2e6");
+    }
+}
