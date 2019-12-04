@@ -3,10 +3,11 @@ var events = []
 var calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
+	var calendarEl = document.getElementById('calendar');
 
-    calendar = new FullCalendar.Calendar(calendarEl, {
+	calendar = new FullCalendar.Calendar(calendarEl, {
 		plugins: ['dayGrid', 'timeGrid', 'interaction'],
+		events: [],
 		selectable: true,
 		editable: true,
         nowIndicator: true,
@@ -67,93 +68,107 @@ document.addEventListener('DOMContentLoaded', function () {
 			};
 			updateAppointment(appt);
 		},
-		events: [],
+		datesRender: function (info) {
+			$.contextMenu({
+				selector: '.fc-day, .fc-day-top',
+				callback: function (key, options) {
+					//show new appointment modal
+					$('#addModal').modal('show')
+				},
+				items: {
+					"edit": { name: "New Appointment", icon: "edit" },
+				}
+			});
+		},
+		eventRender: function (info) {
+			info.el.addEventListener("contextmenu", showDateContext);
+		}
+	});
 
-    });
+	//calendarEl.addEventListener("contextmenu", showDateContext);
 
-    getAppointments();
+	getAppointments();
 
 	calendar.render();
 
-	$('div.fc-row').contextmenu((data) => {
-		if (data.which == 3) {
-			showDateContext();
-		}
-    });
+	// why don't these seem to run?
+	//$(".fc-event-container").contextmenu((event) => showEventContext(event));
 
-    $("#add-form-submit").on('click', function () {
-        var appointment = {}
-        appointment.title = $("#addTitle").val();
-        appointment.location = $("#addLocation").val();
-        appointment.description = $("#addDescription").val();
-        appointment.startTime = $("#starttime").val();
-        appointment.endTime = $("#endtime").val();
-        createAppointment(appointment);
-    })
+	$("#add-form-submit").on('click', function () {
+		var appointment = {}
+		appointment.title = $("#addTitle").val();
+		appointment.location = $("#addLocation").val();
+		appointment.description = $("#addDescription").val();
+		appointment.startTime = $("#starttime").val();
+		appointment.endTime = $("#endtime").val();
+		createAppointment(appointment);
+	})
 });
 
-function showDateContext() {
+function showDateContext(event) {
+	event.preventDefault();
 	alert("right clicked a date");
 }
 
 function showEventContext() {
-	alert("right clicked a event");
+	event.preventDefault();
+	alert("right clicked an event");
 
 }
 
 function getAppointments() {
-    $.ajax({
-        url: '/Appointments/GetAppointments',
-        method: 'GET'
-    }).done(function (data) {
-        data.forEach(function (el) {
-            var ev = {
-                id: el.appointmentId,
-                title: el.title,
-                start: new Date(el.startTime),
-                end: new Date(el.endTime),
-                editable: true,
-                description: el.description,
-                location: el.location,
-                recurrence: el.recurrence,
-                created: el.created,
-                modified: el.modified,
-                userId: el.userId
-            }
-            calendar.addEvent(ev)
-        })
-        calendar.render();
-    }).fail(function (error) {
-        alert("Error getting appointments");
-    })
+	$.ajax({
+		url: '/Appointments/GetAppointments',
+		method: 'GET'
+	}).done(function (data) {
+		data.forEach(function (el) {
+			var ev = {
+				id: el.appointmentId,
+				title: el.title,
+				start: new Date(el.startTime),
+				end: new Date(el.endTime),
+				editable: true,
+				description: el.description,
+				location: el.location,
+				recurrence: el.recurrence,
+				created: el.created,
+				modified: el.modified,
+				userId: el.userId
+			}
+			calendar.addEvent(ev)
+		})
+		calendar.render();
+	}).fail(function (error) {
+		alert("Error getting appointments");
+	})
 }
 
 function createAppointment(appoint) {
-    $.ajax({
-        url: '/Appointments/Create',
-        method: 'POST',
-        dataType: "json",
-        data: {
-            Title: appoint.title,
-            Location: appoint.location,
-            Description: appoint.description,
-            StartTime: appoint.startTime,
-            EndTime: appoint.endTime
-        }
-    }).done(function (data) {
-        var ev = {
-            id: data.appointmentId,
-            title: data.title,
-            start: new Date(data.startTime),
-            end: new Date(data.endTime),
-            editable: true,
-            description: data.description,
-            location: data.location,
-            recurrence: data.recurrence,
-            created: data.created,
-            modified: data.modified,
-            userId: data.userId
-        }
+	$.ajax({
+		url: '/Appointments/Create',
+		method: 'POST',
+		dataType: "json",
+		data: {
+			Title: appoint.title,
+			Location: appoint.location,
+			Description: appoint.description,
+			StartTime: appoint.startTime,
+			EndTime: appoint.endTime
+		}
+	}).done(function (data) {
+		var ev = {
+			id: data.appointmentId,
+			title: data.title,
+			start: new Date(data.startTime),
+			end: new Date(data.endTime),
+			editable: true,
+			description: data.description,
+			location: data.location,
+			recurrence: data.recurrence,
+			created: data.created,
+			modified: data.modified,
+			userId: data.userId
+		}
 		calendar.addEvent(ev)
 	}).fail(function (error) {
 		alert("Error creating appointment");
@@ -172,9 +187,9 @@ function updateAppointment(appoint) {
 }
 
 function parseDate(date) {
-    return date.split("T")[0]
+	return date.split("T")[0]
 }
 
 function parseTime(date) {
-    return date.split("T")[1]
+	return date.split("T")[1]
 }
