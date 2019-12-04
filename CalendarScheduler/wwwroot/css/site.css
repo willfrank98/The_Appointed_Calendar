@@ -74,3 +74,13 @@ body {
     border-radius: 100em !important;
     margin: 0px 2px 0px 2px !important;
 }
+dt {
+    border-bottom: 1px solid #ececec;
+    margin-bottom: 3px;
+}
+dd{
+    margin-left: 3px;
+}
+.btn, .btn:hover, .btn:focus, .btn:active{
+    color: white;
+}

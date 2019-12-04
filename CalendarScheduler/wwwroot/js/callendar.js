@@ -11,10 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		selectable: true,
 		editable: true,
         nowIndicator: true,
+        eventTextColor: 'white',
         customButtons: {
             addButton: {
                 text: 'Add Appointment',
                 click: function () {
+                    $("#addForm").reset();
                     $("#addModal").modal('show');
                 }
             }
@@ -32,9 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		eventClick: function (info) {
 			// if right click
-			if (info.jsEvent.which == 3) {
-				showEventContext();
-			}
+            if (info.jsEvent.which == 3) {
+                showEventContext();
+            } else {
+                openViewModal(info);
+            }
 		},
 		eventDrop: function (info) {
 			event = info.event;
@@ -115,6 +119,18 @@ function showEventContext() {
 	alert("right clicked an event");
 
 }
+
+function openViewModal(info) {
+    console.log(info.event)
+    $("#viewModal .modal-title").html(info.event.title);
+    $("#event-desc").html(info.event.extendedProps.description);
+    $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+    $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
+    $("#event-cat").html(info.event.category ? info.event.category : 'No category');
+    $("#viewModal").modal('show');
+}
+
+
 
 function getAppointments() {
 	$.ajax({
