@@ -25,7 +25,14 @@ namespace CalendarScheduler.Controllers
 
 		public IActionResult Index()
 		{
+			// get/creates items for Locations dropdown
 			ViewBag.Locations = _context.Locations.Select(l => new SelectListItem {
+				Text = l.Name,
+				Value = "" + l.ID
+			}).ToList();
+   
+			// get/creates items for Categories dropdown
+			ViewBag.Categories = _context.Categories.Select(l => new SelectListItem {
 				Text = l.Name,
 				Value = "" + l.ID
 			}).ToList();

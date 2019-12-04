@@ -28,12 +28,13 @@
 					<div class="form-group">
 						<input type="text" id="addTitle" name="Title" class="form-control" placeholder="Title" />
 					</div>
-					@*<div class="form-group">
-							<input type="text" id="addLocation" name="Location" class="form-control" placeholder="Location" />
-					</div>*@
 					<div class="form-group">
 						<label class="control-label">Location</label>
-						<select id="addLocation" class="form-control" asp-items="ViewBag.Locations" placeholder="Location"></select>
+						<select id="addLocation" class="form-control" asp-items="ViewBag.Locations"></select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Category</label>
+						<select id="addCategory" class="form-control" asp-items="ViewBag.Categories"></select>
 					</div>
 					<div class="form-group">
 						<textarea class="form-control" id="addDescription" name="Description" placeholder="Description"></textarea>
