@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CalendarScheduler.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CalendarScheduler.Controllers
 {
@@ -14,14 +15,27 @@ namespace CalendarScheduler.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly CalendarSchedulerContext _context;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(ILogger<HomeController> logger, CalendarSchedulerContext context)
 		{
 			_logger = logger;
+			_context = context;
 		}
 
 		public IActionResult Index()
 		{
+			// get/creates items for Locations dropdown
+			ViewBag.Locations = _context.Locations.Select(l => new SelectListItem {
+				Text = l.Name,
+				Value = "" + l.ID
+			}).ToList();
+   
+			// get/creates items for Categories dropdown
+			ViewBag.Categories = _context.Categories.Select(l => new SelectListItem {
+				Text = l.Name,
+				Value = "" + l.ID
+			}).ToList();
 			return View();
 		}
 

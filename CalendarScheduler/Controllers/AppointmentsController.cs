@@ -15,7 +15,6 @@ namespace CalendarScheduler.Controllers
     public class AppointmentsController : Controller
     {
         private readonly CalendarSchedulerContext _context;
-		//private CalendarSchedulerContext db = new CalendarSchedulerContext();
 
         public AppointmentsController(CalendarSchedulerContext context)
         {
@@ -23,11 +22,11 @@ namespace CalendarScheduler.Controllers
         }
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
-        {
-            var calendarSchedulerContext = _context.Appointment.Include(a => a.User);
-            return View(await calendarSchedulerContext.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var calendarSchedulerContext = _context.Appointment.Include(a => a.User);
+        //    return View(await calendarSchedulerContext.ToListAsync());
+        //}
 
         public JsonResult GetAppointments()
         {
@@ -106,7 +105,7 @@ namespace CalendarScheduler.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Reccurence,Created,Modified,UserId")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)

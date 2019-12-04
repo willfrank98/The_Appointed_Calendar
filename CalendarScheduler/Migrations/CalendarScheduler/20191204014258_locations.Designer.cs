@@ -4,14 +4,16 @@ using CalendarScheduler.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalendarScheduler.Migrations.CalendarScheduler
 {
     [DbContext(typeof(CalendarSchedulerContext))]
-    partial class CalendarSchedulerContextModelSnapshot : ModelSnapshot
+    [Migration("20191204014258_locations")]
+    partial class locations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,24 +61,6 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                     b.HasIndex("UserId");
 
                     b.ToTable("Appointment");
-                });
-
-            modelBuilder.Entity("CalendarScheduler.Models.Category", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CalendarScheduler.Models.Location", b =>
