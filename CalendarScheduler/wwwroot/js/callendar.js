@@ -27,6 +27,38 @@ document.addEventListener('DOMContentLoaded', function () {
 				showEventContext();
 			}
 		},
+		eventDrop: function (info) {
+			event = info.event;
+			var appt = {
+				AppointmentId: event.id,
+				Title: event.title,
+				Description: event.extendedProps.description,
+				Location: event.extendedProps.location,
+				StartTime: event.start,
+				EndTime: event.end,
+				Recurrence: event.extendedProps.recurrence,
+				Created: event.extendedProps.created,
+				Modified: event.extendedProps.modified,
+				UserId: event.extendedProps.userId,
+			};
+			updateAppointment(appt);
+		},
+		eventResize: function (info) {
+			event = info.event;
+			var appt = {
+				AppointmentId: event.id,
+				Title: event.title,
+				Description: event.extendedProps.description,
+				Location: event.extendedProps.location,
+				StartTime: event.start,
+				EndTime: event.end,
+				Recurrence: event.extendedProps.recurrence,
+				Created: event.extendedProps.created,
+				Modified: event.extendedProps.modified,
+				UserId: event.extendedProps.userId,
+			};
+			updateAppointment(appt);
+		},
 		events: [],
 
     });
@@ -122,19 +154,13 @@ function createAppointment(appoint) {
 
 // Takes in an existing appointment object and passes it to the server to save to the database
 function updateAppointment(appoint) {
-    var formatted_appointment = {};
-    formatted_appointment.StartTime = appoint.startTime;
-    formatted_appointment.Id = appoint.id;
-    formatted_appointment.Title = appoint.title;
-    formatted_appointment.Description = appoint.description;
-    formatted_appointment.Location = appoint.location;
-    formatted_appointment.Recurrence = appoint.recurrence;
-
-    $.ajax({
-        url: '/Appointments/Edit',
-        method: 'POST',
-        data: formatted_appointment
-    })
+	$.ajax({
+		url: '/Appointments/Edit/' + appoint.AppointmentId,
+		method: 'POST',
+		data: appoint
+	}).done(function (data) {
+		console.log('updated!');
+	});
 }
 
 function parseDate(date) {
