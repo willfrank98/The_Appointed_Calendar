@@ -14,5 +14,6 @@ namespace CalendarScheduler.Models
         }
 
         public DbSet<Appointment> Appointment { get; set; }
+        public DbSet<Location> Locations { get; set; }
     }
 }

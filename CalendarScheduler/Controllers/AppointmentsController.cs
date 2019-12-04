@@ -15,7 +15,6 @@ namespace CalendarScheduler.Controllers
     public class AppointmentsController : Controller
     {
         private readonly CalendarSchedulerContext _context;
-		//private CalendarSchedulerContext db = new CalendarSchedulerContext();
 
         public AppointmentsController(CalendarSchedulerContext context)
         {
@@ -23,11 +22,11 @@ namespace CalendarScheduler.Controllers
         }
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
-        {
-            var calendarSchedulerContext = _context.Appointment.Include(a => a.User);
-            return View(await calendarSchedulerContext.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var calendarSchedulerContext = _context.Appointment.Include(a => a.User);
+        //    return View(await calendarSchedulerContext.ToListAsync());
+        //}
 
         public JsonResult GetAppointments()
         {
