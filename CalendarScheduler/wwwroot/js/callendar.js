@@ -9,11 +9,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		plugins: ['dayGrid', 'timeGrid', 'interaction'],
 		selectable: true,
 		editable: true,
-		nowIndicator: true,
+        nowIndicator: true,
+        customButtons: {
+            addButton: {
+                text: 'Add Appointment',
+                click: function () {
+                    $("#addModal").modal('show');
+                }
+            }
+        },
 		header: {
-			left: 'prevYear,prev,next,nextYear today',
+			left: 'prevYear,prev,next,nextYear addButton',
 			center: 'title',
-			right: 'dayGridMonth,timeGridWeek,timeGridDay'
+			right: 'today dayGridMonth,timeGridWeek,timeGridDay'
 		},
 		dateClick: function (info) {
 			// if right click
