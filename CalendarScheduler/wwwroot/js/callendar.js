@@ -29,33 +29,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		eventDrop: function (info) {
 			event = info.event;
-			var appt = {
-				AppointmentId: event.id,
-				Title: event.title,
-				Description: event.extendedProps.description,
-				Location: event.extendedProps.location,
-				StartTime: event.start,
-				EndTime: event.end,
-				Recurrence: event.extendedProps.recurrence,
-				Created: event.extendedProps.created,
-				Modified: event.extendedProps.modified,
-				UserId: event.extendedProps.userId,
-			};
+            var appt = {}
+				appt.AppointmentId = event.id
+				appt.title = event.title
+				appt.description = event.extendedProps.description
+				appt.location = event.extendedProps.location
+                appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+                appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+				appt.recurrence= event.extendedProps.recurrence
+
 			updateAppointment(appt);
 		},
 		eventResize: function (info) {
 			event = info.event;
 			var appt = {
 				AppointmentId: event.id,
-				Title: event.title,
-				Description: event.extendedProps.description,
-				Location: event.extendedProps.location,
-				StartTime: event.start,
-				EndTime: event.end,
-				Recurrence: event.extendedProps.recurrence,
-				Created: event.extendedProps.created,
-				Modified: event.extendedProps.modified,
-				UserId: event.extendedProps.userId,
+				title: event.title,
+				description: event.extendedProps.description,
+				location: event.extendedProps.location,
+                startTime: moment(event.start).format("M/D/YYYY h:mm A"),
+                endTime: moment(event.end).format("M/D/YYYY h:mm A"),
+				recurrence: event.extendedProps.recurrence,
 			};
 			updateAppointment(appt);
 		},
