@@ -82,14 +82,14 @@ document.addEventListener('DOMContentLoaded', function () {
 						case "edit":
 							openViewModal(info);
 							break;
-						case "delete":
+						case "cancel":
 							openDeleteModal(info);
 							break;
 					}
 				},
 				items: {
 					"edit": { name: "Edit", icon: "edit" },
-					"cancel": { name: "Cancel", icon: "delete" },
+					"cancel": { name: "Delete", icon: "delete" },
 				}
 			});
 		}
