@@ -140,7 +140,7 @@ namespace CalendarScheduler.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return new JsonResult(appointment);
             }
             ViewData["UserId"] = new SelectList(_context.Set<IdentityUser>(), "Id", "Id", appointment.UserId);
             return View(appointment);

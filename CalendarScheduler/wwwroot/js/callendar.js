@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				callback: function (key, options) {
 					switch (key) {
 						case "edit":
-							openViewModal(info);
+							openEditModal(info.event);
 							break;
 						case "cancel":
 							openDeleteModal(info);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	calendar.render();
 
 	$("#add-form-submit").on('click', function () {
-		var appointment = {}
+        var appointment = {}
 		appointment.title = $("#addTitle").val();
 		appointment.location = $("#addLocation").val();
 		appointment.description = $("#addDescription").val();
@@ -110,6 +110,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	})
 });
 
+$("#edit-form-submit").on('click', function () {
+    var appointment = {}
+    appointment.AppointmentId = $("#apptId").val();
+    appointment.title = $("#editTitle").val();
+    appointment.location = $("#editLocation").val();
+    appointment.description = $("#editDescription").val();
+    appointment.startTime = $("#editStart").val();
+    appointment.endTime = $("#editEnd").val();
+    updateAppointment(appointment);
+})
+
 function openViewModal(info) {
     console.log(info.event)
     $("#viewModal .modal-title").html(info.event.title);
@@ -117,13 +128,29 @@ function openViewModal(info) {
     $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
     $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
     $("#event-cat").html(info.event.category ? info.event.category : 'No category');
+    $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
     $("#viewModal").modal('show');
+}
+
+function openEditModal(event) {
+    $("#apptId").val(event.id);
+    $("#editTitle").val(event.title);
+    $("#editLocation").val(event.extendedProps.location);
+    $("#editCategory").val(event.extendedProps.category);
+    $("#editDescription").val(event.extendedProps.description);
+    $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
+    $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+    $("#editModal").modal('show');
 }
 
 function openDeleteModal(info) {
     console.log(info.event)
     $("#deleteModal .modal-title").html(info.event.title);
     $("#deleteModal").modal('show');
+}
+
+function getEventEdit(id) {
+    openEditModal(calendar.getEventById(id))
 }
 
 function getAppointments() {
@@ -187,13 +214,30 @@ function createAppointment(appoint) {
 
 // Takes in an existing appointment object and passes it to the server to save to the database
 function updateAppointment(appoint) {
-	$.ajax({
-		url: '/Appointments/Edit/' + appoint.AppointmentId,
-		method: 'POST',
-		data: appoint
-	}).done(function (data) {
-		console.log('updated!');
-	});
+    $.ajax({
+        url: '/Appointments/Edit/' + appoint.AppointmentId,
+        method: 'POST',
+        data: appoint
+    }).done(function (data) {
+
+        var ev = {
+            id: data.appointmentId,
+            title: data.title,
+            start: new Date(data.startTime),
+            end: new Date(data.endTime),
+            editable: true,
+            description: data.description,
+            location: data.location,
+            recurrence: data.recurrence,
+            created: data.created,
+            modified: data.modified,
+            userId: data.userId
+        }
+
+        calendar.getEventById(ev.id).remove();
+        calendar.addEvent(ev);
+    });
+
 }
 
 function parseDate(date) {

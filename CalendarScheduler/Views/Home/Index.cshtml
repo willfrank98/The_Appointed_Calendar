@@ -84,7 +84,7 @@
                 </dl>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning">Edit</button>
+                <button id="goEditBtn" type="button" class="btn btn-warning" data-dismiss="modal">Edit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -105,6 +105,65 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="editModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="apptId" />
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <input type="text" id="editTitle" name="Title" class="form-control" placeholder="Title" onblur="validateRequired(this)" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Location</label>
+                        <select id="editLocation" class="form-control" asp-items="ViewBag.Locations"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Category</label>
+                        <select id="editCategory" class="form-control" asp-items="ViewBag.Categories"></select>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="editDescription" name="Description" placeholder="Description" onblur="validateRequired(this)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="starttime">Start Time</label>
+                        <input type="datetime-local" name="StartTime" id="editStart" value="Select Date" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="endtime">End Time</label>
+                        <input type="datetime-local" name="EndTime" id="editEnd" value="Select Date" class="form-control" />
+                    </div>
+                    <label>Recurrence</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio1" name="editRecurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio1">Daily</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio2" name="editRecurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio2">Weekly</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="radio3" name="editRecurrence" class="custom-control-input">
+                        <label class="custom-control-label" for="radio3">Monthly</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-form-submit" type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
