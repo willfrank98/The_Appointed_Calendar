@@ -33,11 +33,11 @@
                     </div>
                     <div class="form-group">
                         <label for="starttime">Start Time</label>
-                        <input type="datetime-local" name="StartTime" id="starttime" value="2019-12-03T12:00:00" class="form-control" />
+                        <input type="datetime-local" name="StartTime" id="starttime" value="Select Date"  class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="endtime">End Time</label>
-                        <input type="datetime-local" name="EndTime" id="endtime" value="2019-12-04T12:00:00" class="form-control" />
+                        <input type="datetime-local" name="EndTime" id="endtime" value="Select Date" class="form-control" />
                     </div>
                     <label>Recurrence</label>
                     <div class="custom-control custom-radio custom-control-inline">
@@ -104,7 +104,7 @@
                 <h5>Are you sure you wish to delete this appointment?</h5>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning">Yes</button>
+                <button type="button" class="btn btn-danger">Yes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -121,16 +121,14 @@
 
         $(document).ready(function () {
 
-
-            $("#add-form-submit").on('click', function () {
-                //TODO handle form submit and validation
-            })
-
+          
             $("input[type='datetime-local']").flatpickr({
                 enableTime: true,
                 dateFormat: "m/d/Y h:i K",
-                defaultDate: new Date("2019-12-03T12:00:00")
+                defaultDate: new Date()
             });
+
+
         });
     </script>
 }

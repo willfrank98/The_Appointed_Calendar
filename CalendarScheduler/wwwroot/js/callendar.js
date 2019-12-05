@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						case "edit":
 							openViewModal(info);
 							break;
-						case "cancel":
+						case "delete":
 							openDeleteModal(info);
 							break;
 					}
