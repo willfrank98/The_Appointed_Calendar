@@ -167,13 +167,12 @@ namespace CalendarScheduler.Controllers
 
         // POST: Appointments/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<JsonResult> DeleteConfirmed(int id)
         {
             var appointment = await _context.Appointment.FindAsync(id);
             _context.Appointment.Remove(appointment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return new JsonResult(new { id = id });
         }
 
         private bool AppointmentExists(int id)
