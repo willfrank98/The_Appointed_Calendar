@@ -1,8 +1,33 @@
-﻿// If we declare the events up here, it should be able to be accessed by all the functions.
-var events = []
-var calendar;
+﻿var calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
+	jQuery.fn.extend({
+		getPath: function () {
+			var path, node = this;
+			while (node.length) {
+				var realNode = node[0], name = realNode.localName;
+				if (!name) break;
+				name = name.toLowerCase();
+
+				var parent = node.parent();
+
+				var sameTagSiblings = parent.children(name);
+				if (sameTagSiblings.length > 1) {
+					var allSiblings = parent.children();
+					var index = allSiblings.index(realNode) + 1;
+					if (index > 1) {
+						name += ':nth-child(' + index + ')';
+					}
+				}
+
+				path = name + (path ? '>' + path : '');
+				node = parent;
+			}
+
+			return path;
+		}
+	});
+
 	var calendarEl = document.getElementById('calendar');
 
 	calendar = new FullCalendar.Calendar(calendarEl, {
@@ -26,19 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			center: 'title',
 			right: 'today dayGridMonth,timeGridWeek,timeGridDay'
 		},
-		dateClick: function (info) {
-			// if right click
-			if (info.jsEvent.which == 3) {
-				showDateContext();
-			}
-		},
 		eventClick: function (info) {
-			// if right click
-            if (info.jsEvent.which == 3) {
-                showEventContext();
-            } else {
-                openViewModal(info);
-            }
+			openViewModal(info);
 		},
 		eventDrop: function (info) {
 			event = info.event;
@@ -80,23 +94,37 @@ document.addEventListener('DOMContentLoaded', function () {
 					$('#addModal').modal('show')
 				},
 				items: {
-					"edit": { name: "New Appointment", icon: "edit" },
+					"add": { name: "New Appointment", icon: "edit" },
 				}
 			});
 		},
 		eventRender: function (info) {
-			info.el.addEventListener("contextmenu", showDateContext);
+			// set unique id
+			var id = info.event.id;
+			info.el.id = "event" + id;
+			$.contextMenu({
+				selector: "#event" + id,
+				callback: function (key, options) {
+					switch (key) {
+						case "edit":
+							openViewModal(info);
+							break;
+						case "cancel":
+							openDeleteModal(info);
+							break;
+					}
+				},
+				items: {
+					"edit": { name: "Edit", icon: "edit" },
+					"cancel": { name: "Cancel", icon: "delete" },
+				}
+			});
 		}
 	});
-
-	//calendarEl.addEventListener("contextmenu", showDateContext);
 
 	getAppointments();
 
 	calendar.render();
-
-	// why don't these seem to run?
-	//$(".fc-event-container").contextmenu((event) => showEventContext(event));
 
 	$("#add-form-submit").on('click', function () {
 		var appointment = {}
@@ -109,17 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	})
 });
 
-function showDateContext(event) {
-	event.preventDefault();
-	alert("right clicked a date");
-}
-
-function showEventContext() {
-	event.preventDefault();
-	alert("right clicked an event");
-
-}
-
 function openViewModal(info) {
     console.log(info.event)
     $("#viewModal .modal-title").html(info.event.title);
@@ -130,7 +147,11 @@ function openViewModal(info) {
     $("#viewModal").modal('show');
 }
 
-
+function openDeleteModal(info) {
+    console.log(info.event)
+    $("#deleteModal .modal-title").html(info.event.title);
+    $("#deleteModal").modal('show');
+}
 
 function getAppointments() {
 	$.ajax({

@@ -49,8 +49,35 @@ namespace CalendarScheduler.Data
             {
                 context.Appointment.Add(a);
             }
+            //var x = await context.SaveChangesAsync();
+
+            var locations = new Location[]
+            {
+                new Location{Name="Office", Color="#11111"},
+                new Location{Name="School", Color="#333333"},
+                new Location{Name="Home", Color="#555555"},
+            };
+
+            foreach (Location l in locations)
+            {
+                context.Locations.Add(l);
+            }
+
+            var categories = new Category[]
+            {
+                new Category{Name="Important", Color="#abcdef"},
+                new Category{Name="Personal", Color="#bcdefa"},
+                new Category{Name="Work", Color="#cdefab"},
+            };
+
+            foreach (Category c in categories)
+            {
+                context.Categories.Add(c);
+            }
+
             var x = await context.SaveChangesAsync();
-			//context.Database.
+            context.SaveChanges();
+
 
             return;
         }
