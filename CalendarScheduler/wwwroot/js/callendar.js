@@ -1,4 +1,5 @@
-﻿var calendar;
+﻿// ********************* Calendar ******************** //
+var calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
 	var calendarEl = document.getElementById('calendar');
@@ -104,6 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	})
 });
 
+// ******************** Event Handlers ********************* //
+
 $("#edit-form-submit").on('click', function () {
     var appointment = {}
     appointment.AppointmentId = $("#apptId").val();
@@ -115,95 +118,65 @@ $("#edit-form-submit").on('click', function () {
     updateAppointment(appointment);
 })
 
-function openViewModal(info) {
-    console.log(info.event)
-    $("#viewModal .modal-title").html(info.event.title);
-    $("#event-desc").html(info.event.extendedProps.description);
-    $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
-    $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
-    $("#event-cat").html(info.event.category ? info.event.category : 'No category');
-    $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
-    $("#viewModal").modal('show');
-}
-
-function openEditModal(event) {
-    $("#apptId").val(event.id);
-    $("#editTitle").val(event.title);
-    $("#editLocation").val(event.extendedProps.location);
-    $("#editCategory").val(event.extendedProps.category);
-    $("#editDescription").val(event.extendedProps.description);
-    $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
-    $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
-    $("#editModal").modal('show');
-}
-
-function openDeleteModal(info) {
-    console.log(info.event)
-    $("#deleteModal .modal-title").html(info.event.title);
-    $("#deleteModal").modal('show');
-}
-
-function getEventEdit(id) {
-    openEditModal(calendar.getEventById(id))
-}
+// *************** Async Functions ******************** //
 
 function getAppointments() {
-	$.ajax({
-		url: '/Appointments/GetAppointments',
-		method: 'GET'
-	}).done(function (data) {
-		data.forEach(function (el) {
-			var ev = {
-				id: el.appointmentId,
-				title: el.title,
-				start: new Date(el.startTime),
-				end: new Date(el.endTime),
-				editable: true,
-				description: el.description,
-				location: el.location,
-				recurrence: el.recurrence,
-				created: el.created,
-				modified: el.modified,
-				userId: el.userId
-			}
-			calendar.addEvent(ev)
-		})
-		calendar.render();
-	}).fail(function (error) {
-		alert("Error getting appointments");
-	})
+    $.ajax({
+        url: '/Appointments/GetAppointments',
+        method: 'GET'
+    }).done(function (data) {
+        data.forEach(function (el) {
+            var ev = {
+                id: el.appointmentId,
+                title: el.title,
+                start: new Date(el.startTime),
+                end: new Date(el.endTime),
+                editable: true,
+                description: el.description,
+                location: el.location,
+                recurrence: el.recurrence,
+                created: el.created,
+                modified: el.modified,
+                userId: el.userId
+            }
+            calendar.addEvent(ev)
+        })
+        calendar.render();
+    }).fail(function (error) {
+        alert("Error getting appointments");
+    })
 }
 
 function createAppointment(appoint) {
-	$.ajax({
-		url: '/Appointments/Create',
-		method: 'POST',
-		dataType: "json",
-		data: {
-			Title: appoint.title,
-			Location: appoint.location,
-			Description: appoint.description,
-			StartTime: appoint.startTime,
-			EndTime: appoint.endTime
-		}
-	}).done(function (data) {
-		var ev = {
-			id: data.appointmentId,
-			title: data.title,
-			start: new Date(data.startTime),
-			end: new Date(data.endTime),
-			editable: true,
-			description: data.description,
-			location: data.location,
-			recurrence: data.recurrence,
-			created: data.created,
-			modified: data.modified,
-			userId: data.userId
-		}
-		calendar.addEvent(ev)
-	}).fail(function (error) {
-		alert("Error creating appointment");
-	});
+    $.ajax({
+        url: '/Appointments/Create',
+        method: 'POST',
+        dataType: "json",
+        data: {
+            Title: appoint.title,
+            Location: appoint.location,
+            Description: appoint.description,
+            StartTime: appoint.startTime,
+            EndTime: appoint.endTime
+        }
+    }).done(function (data) {
+        var ev = {
+            id: data.appointmentId,
+            title: data.title,
+            start: new Date(data.startTime),
+            end: new Date(data.endTime),
+            editable: true,
+            description: data.description,
+            location: data.location,
+            recurrence: data.recurrence,
+            created: data.created,
+            modified: data.modified,
+            userId: data.userId
+        }
+        calendar.addEvent(ev)
+    }).fail(function (error) {
+        alert("Error creating appointment");
+    });
 }
 
 // Takes in an existing appointment object and passes it to the server to save to the database
@@ -234,18 +207,74 @@ function updateAppointment(appoint) {
 
 }
 
-function parseDate(date) {
-	return date.split("T")[0]
+function deleteAppointment() {
+    var id = $("#deleteModalEventId")[0].innerHTML
+    $.ajax({
+        url: '/Appointments/Delete/' + id,
+        method: 'POST'
+    }).done(function (data) {
+        calendar.getEventById(id).remove();
+        $("#deleteModal").modal('hide');
+    }).fail(function (error) {
+        alert("Error Deleting Event");
+    })
 }
 
-function parseTime(date) {
-	return date.split("T")[1]
+// ********************* Modals ************************ //
+
+function openViewModal(info) {
+    console.log(info.event)
+    $("#viewModal .modal-title").html(info.event.title);
+    $("#event-desc").html(info.event.extendedProps.description);
+    $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+    $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
+    $("#event-cat").html(info.event.category ? info.event.category : 'No category');
+    $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
+    $("#viewModal").modal('show');
 }
 
+function openEditModal(event) {
+    $("#apptId").val(event.id);
+    $("#editTitle").val(event.title);
+    $("#editLocation").val(event.extendedProps.location);
+    $("#editCategory").val(event.extendedProps.category);
+    $("#editDescription").val(event.extendedProps.description);
+    $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
+    $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+    $("#editModal").modal('show');
+}
+
+function openDeleteModal(info) {
+    console.log(info.event)
+    $("#deleteModal .modal-title").html(info.event.title);
+    $("#deleteModalEventId").html(info.event.id);
+    $("#deleteModal").modal('show');
+}
+
+// ******************* HTML FUNCTIONS ********************* //
+
+// This should make an input red if it's empty when they click off of it. Just to show that it's required
+// Used in the creation form
 function validateRequired(el) {
     if ($(el).val() == "") {
         $(el).css("border-color", "red");
     } else {
         $(el).css("border-color", "#dee2e6");
     }
+}
+
+function getEventEdit(id) {
+    openEditModal(calendar.getEventById(id))
+}
+
+// ******************* PRIVATE ************************ //
+
+// In the event that we need to pull the date portion of the Date Objects arriving from the server
+function parseDate(date) {
+	return date.split("T")[0]
+}
+
+// If we want to isolate the Time from the date objects from the server
+function parseTime(date) {
+	return date.split("T")[1]
 }
