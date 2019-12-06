@@ -103,4 +103,5 @@ dd{
 .right-landing img{
     max-width: 55%;
     position: fixed;
+    right: 0;
 }
