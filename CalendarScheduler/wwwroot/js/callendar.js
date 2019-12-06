@@ -227,6 +227,7 @@ function createAppointment(appoint) {
             modified: data.modified,
             userId: data.userId,
             backgroundColor: data.backgroundColor,
+            borderColor: data.borderColor
         }
 
         if (data.reccurence != undefined) {
@@ -261,6 +262,7 @@ function updateAppointment(appoint) {
             modified: data.modified,
             userId: data.userId,
             backgroundColor: data.backgroundColor,
+            borderColor: data.borderColor
         }
 
         if (data.reccurence != undefined) {

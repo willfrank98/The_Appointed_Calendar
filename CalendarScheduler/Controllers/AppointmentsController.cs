@@ -79,6 +79,7 @@ namespace CalendarScheduler.Controllers
             appointment.Description = Description;
             appointment.Title = Title;
             appointment.Location = Location;
+            appointment.Category = Category;
             appointment.StartTime = DateTime.Parse(StartTime);
             appointment.EndTime = DateTime.Parse(EndTime);
             appointment.UserId = _currentUserId;
@@ -90,10 +91,16 @@ namespace CalendarScheduler.Controllers
                 appointment.EndRecurrence = null;
 
             var color = await _context.Locations.Where(l => l.Name == Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
-            appointment.BackgroundColor = color.Color;
+            if (color != null)
+                appointment.BackgroundColor = color.Color;
+            else
+                appointment.BackgroundColor = null;
 
             var border = await _context.Categories.Where(c => c.Name == Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
-            appointment.BorderColor = border.Color;
+            if (border != null)
+                appointment.BorderColor = border.Color;
+            else
+                appointment.BorderColor = null;
 
             if (ModelState.IsValid)
             {
@@ -141,10 +148,17 @@ namespace CalendarScheduler.Controllers
                     appointment.UserId = _currentUserId;
 
                     var color = await _context.Locations.Where(l => l.Name == appointment.Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
-                    appointment.BackgroundColor = color.Color;
+                    if (color != null)
+                        appointment.BackgroundColor = color.Color;
+                    else
+                        appointment.BackgroundColor = null;
+
 
                     var border = await _context.Categories.Where(c => c.Name == appointment.Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
-                    appointment.BorderColor = border.Color;
+                    if (border != null)
+                        appointment.BorderColor = border.Color;
+                    else
+                        appointment.BorderColor = null;
 
                     _context.Appointment.Update(appointment);
 					await _context.SaveChangesAsync();
