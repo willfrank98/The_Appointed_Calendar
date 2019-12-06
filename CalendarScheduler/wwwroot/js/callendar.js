@@ -100,7 +100,23 @@ document.addEventListener('DOMContentLoaded', function () {
 		appointment.location = $("#addLocation").val();
 		appointment.description = $("#addDescription").val();
 		appointment.startTime = $("#starttime").val();
-		appointment.endTime = $("#endtime").val();
+        appointment.endTime = $("#endtime").val();
+        var recur = $("input[name='Recurrence']:checked")[0].id;
+        if (recur != "none") {
+            if (recur == "daily") {
+                appointment.daysOfWeek = [0,1,2,3,4,5,6]
+            }
+            else if (recur == "weekly") {
+                appointment.daysOfWeek = [];
+                $('input[type="checkbox"]').each((i, el) => {
+                    if (el.checked) {
+                        appointment.daysOfWeek.push(i);
+                    }
+                });
+            }
+            appointment.startRecur = appointment.startTime;
+            appointment.endRecur = $("endRecur").val();
+        }
 		createAppointment(appointment);
 	})
 });
@@ -148,17 +164,19 @@ function getAppointments() {
 }
 
 function createAppointment(appoint) {
+    data = {
+        Title: appoint.title,
+        Location: appoint.location,
+        Description: appoint.description,
+        StartTime: appoint.startTime,
+        EndTime: appoint.endTime,
+        Recurrence: appoint.recur,
+    }
     $.ajax({
         url: '/Appointments/Create',
         method: 'POST',
         dataType: "json",
-        data: {
-            Title: appoint.title,
-            Location: appoint.location,
-            Description: appoint.description,
-            StartTime: appoint.startTime,
-            EndTime: appoint.endTime
-        }
+        data: data
     }).done(function (data) {
         var ev = {
             id: data.appointmentId,

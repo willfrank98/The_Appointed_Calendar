@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CalendarScheduler.Data;
 using CalendarScheduler.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace CalendarScheduler
 {
-	public class Program
+    public class Program
 	{
 		public static async Task Main(string[] args)
 		{
