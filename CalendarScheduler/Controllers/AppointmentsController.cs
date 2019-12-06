@@ -134,7 +134,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location, Category,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId,BackgroundColor,BorderColor")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location, Category,StartTime,EndTime,Reccurence,EndRecurrence,Created,Modified,UserId,BackgroundColor,BorderColor")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {

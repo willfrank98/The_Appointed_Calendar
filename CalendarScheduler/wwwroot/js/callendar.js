@@ -43,14 +43,15 @@ document.addEventListener('DOMContentLoaded', function () {
             appt.userId = event.extendedProps.userId;
             appt.backgroundColor = event.backgroundColor;
 
-            if (event.daysOfWeek != undefined) {
-                appt.recurrence = event.daysOfWeek;
-                appt.endRecurrence = moment(event.endRecur).format("M/D/YYYY h:mm A");
+            if (event.extendedProps.reccurence != undefined) {
+                appt.reccurence = event.extendedProps.reccurence;
+                appt.startTime = moment(event.extendedProps.start).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
+                appt.endTime = moment(event.extendedProps.end).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
+                appt.endRecurrence = moment(event.extendedProps.endOfR).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
             } else {
-                appt.recurrence = null;
+                appt.reccurence = null;
                 appt.endRecurrence = null;
             }
-
 			updateAppointment(appt);
 		},
 		eventResize: function (info) {
@@ -157,6 +158,23 @@ $("#edit-form-submit").on('click', function () {
     appointment.description = $("#editDescription").val();
     appointment.startTime = $("#editStart").val();
     appointment.endTime = $("#editEnd").val();
+    var recur = $("input[name='RecurrenceEdit']:checked")[0].id;
+    var daysOfWeek = [];
+    if (recur != "noneedit") {
+        if (recur == "dailyedit") {
+            daysOfWeek = [0, 1, 2, 3, 4, 5, 6]
+        }
+        else if (recur == "weeklyedit") {
+            $('#editModal input[type="checkbox"]').each((i, el) => {
+                if (el.checked) {
+                    daysOfWeek.push(i);
+                }
+            });
+        }
+        appointment.EndRecurrence = $("#editendRecur").val();
+        appointment.Reccurence = daysOfWeek.join()
+    }
+    console.log(recur)
     updateAppointment(appointment);
 })
 
@@ -189,9 +207,9 @@ function getAppointments() {
                 ev.daysOfWeek = el.reccurence.split(',').map(Number);
                 ev.startRecur = new Date(el.startTime);
                 ev.endRecur = new Date(el.endRecurrence);
+                ev.endOfR = ev.endRecur;
                 ev.groupId = ev.id
             }
-            console.log(el)
             calendar.addEvent(ev)
         })
         calendar.render();
@@ -238,10 +256,10 @@ function createAppointment(appoint) {
             ev.daysOfWeek = data.reccurence.split(',').map(Number);
             ev.startRecur = new Date(data.startTime);
             ev.endRecur = new Date(data.endRecurrence);
+            ev.endOfR = ev.endRecur;
             ev.groupId = ev.id
         }
 
-        console.log(ev)
         calendar.addEvent(ev)
     }).fail(function (error) {
         alert("Error creating appointment");
@@ -255,6 +273,7 @@ function updateAppointment(appoint) {
         method: 'POST',
         data: appoint
     }).done(function (data) {
+        console.log(data)
         var ev = {
             id: data.appointmentId,
             title: data.title,
@@ -276,9 +295,10 @@ function updateAppointment(appoint) {
             ev.daysOfWeek = data.reccurence.split(',').map(Number);
             ev.startRecur = new Date(data.startTime);
             ev.endRecur = new Date(data.endRecurrence);
-            ev.groupId = ev.id
+            ev.endOfR = ev.endRecur;
+            ev.groupId = ev.id;
         }
-
+        console.log(ev)
         calendar.getEventById(ev.id).remove();
         calendar.addEvent(ev);
     });
@@ -301,7 +321,6 @@ function deleteAppointment() {
 // ********************* Modals ************************ //
 
 function openViewModal(info) {
-    console.log(info)
     if (!info.event.extendedProps.reccurence) {
         $("#viewModal .modal-title").html(info.event.title);
         $("#event-desc").html(info.event.extendedProps.description);
@@ -331,7 +350,6 @@ function getReccurenceDays(nums) {
         return "Daily";
     }
     $.each(numbers, function (k, v) {
-        console.log(v)
         switch (v) {
             case '0':
                 days += 'Monday ';
@@ -361,7 +379,6 @@ function getReccurenceDays(nums) {
 }
 
 function openEditModal(event) {
-    console.log(event)
     if (event.extendedProps.reccurence == undefined) {
         $("#apptId").val(event.id);
         $("#editTitle").val(event.title);
@@ -382,7 +399,7 @@ function openEditModal(event) {
         $("#editDescription").val(event.extendedProps.description);
         $("#editStart").val(moment(event.extendedProps.start).format("M/D/YYYY h:mm A"));
         $("#editEnd").val(moment(event.extendedProps.end).format("M/D/YYYY h:mm A"));
-        $("#editendRecur").val("Select Date");
+        $("#editendRecur").val(moment(event.extendedProps.endOfR).format("M/D/YYYY h:mm A"));
         var r = getReccurenceDays(event.extendedProps.reccurence);
         if (r == "Daily") {
             $("#dailyedit").prop('checked', true);
