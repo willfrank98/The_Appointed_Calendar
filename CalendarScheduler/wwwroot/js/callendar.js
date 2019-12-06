@@ -184,6 +184,7 @@ function getAppointments() {
                 ev.endRecur = new Date(el.endRecurrence);
             }
             calendar.addEvent(ev)
+            console.log(calendar.getEventById(ev.id))
         })
         calendar.render();
     }).fail(function (error) {

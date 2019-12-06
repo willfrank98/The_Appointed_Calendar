@@ -89,7 +89,7 @@ namespace CalendarScheduler.Controllers
             else
                 appointment.EndRecurrence = null;
 
-            var color = await _context.Locations.Where(l => l.Name == Location).FirstOrDefaultAsync();
+            var color = await _context.Locations.Where(l => l.Name == Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
             appointment.BackgroundColor = color.Color;
 
             if (ModelState.IsValid)
