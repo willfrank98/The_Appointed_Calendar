@@ -238,6 +238,7 @@ function createAppointment(appoint) {
             ev.daysOfWeek = data.reccurence.split(',').map(Number);
             ev.startRecur = new Date(data.startTime);
             ev.endRecur = new Date(data.endRecurrence);
+            ev.groupId = ev.id
         }
 
         console.log(ev)
@@ -275,6 +276,7 @@ function updateAppointment(appoint) {
             ev.daysOfWeek = data.reccurence.split(',').map(Number);
             ev.startRecur = new Date(data.startTime);
             ev.endRecur = new Date(data.endRecurrence);
+            ev.groupId = ev.id
         }
 
         calendar.getEventById(ev.id).remove();
@@ -329,27 +331,27 @@ function getReccurenceDays(nums) {
         return "Daily";
     }
     $.each(numbers, function (k, v) {
-
+        console.log(v)
         switch (v) {
-            case 0:
+            case '0':
                 days += 'Monday ';
                 break;
-            case 1:
+            case '1':
                 days += 'Tuesday ';
                 break;
-            case 2:
+            case '2':
                 days += 'Wednesday ';
                 break;
-            case 3:
+            case '3':
                 days += 'Thursday ';
                 break;
-            case 4:
+            case '4':
                 days += 'Friday ';
                 break;
-            case 5:
+            case '5':
                 days += 'Saturday ';
                 break;
-            case 6:
+            case '6':
                 days += 'Sunday ';
                 break;
         }
@@ -359,7 +361,8 @@ function getReccurenceDays(nums) {
 }
 
 function openEditModal(event) {
-    if (event.extendedProps.reccurence != undefined) {
+    console.log(event)
+    if (event.extendedProps.reccurence == undefined) {
         $("#apptId").val(event.id);
         $("#editTitle").val(event.title);
         $("#editLocation").val(event.extendedProps.location);
@@ -367,7 +370,7 @@ function openEditModal(event) {
         $("#editDescription").val(event.extendedProps.description);
         $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
         $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
-        $("#noneedit").prop('checked', true);
+        $("#noneedit").prop('checked', true)
         $("#editendRecur").val('Select Date');
         $("#recur-box-edit").hide();
     }
@@ -377,12 +380,53 @@ function openEditModal(event) {
         $("#editLocation").val(event.extendedProps.location);
         $("#editCategory").val(event.extendedProps.category);
         $("#editDescription").val(event.extendedProps.description);
-        $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
-        $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+        $("#editStart").val(moment(event.extendedProps.start).format("M/D/YYYY h:mm A"));
+        $("#editEnd").val(moment(event.extendedProps.end).format("M/D/YYYY h:mm A"));
+        $("#editendRecur").val("Select Date");
+        var r = getReccurenceDays(event.extendedProps.reccurence);
+        if (r == "Daily") {
+            $("#dailyedit").prop('checked', true);
+        } else {
+            //check boxes for days of week and check weekly box
+            $("#weeklyedit").prop('checked', true);
+            checkEditDays(event.extendedProps.reccurence);
+        }
         $("#recur-box-edit").show();
 
     }
     $("#editModal").modal('show');
+}
+
+function checkEditDays(nums) {
+    var numbers = nums.split(',');
+    $.each(numbers, function (k, v) {
+
+        switch (v) {
+            case '0':
+                $("#day0checkedit").prop('checked', true);
+                break;
+            case '1':
+                $("#day1checkedit").prop('checked', true);
+                break;
+            case '2':
+                $("#day2checkedit").prop('checked', true);
+                break;
+            case '3':
+                $("#day3checkedit").prop('checked', true);
+                break;
+            case '4':
+                $("#day4checkedit").prop('checked', true);
+                break;
+            case '5':
+                $("#day5checkedit").prop('checked', true);
+                break;
+            case '6':
+                $("#day6checkedit").prop('checked', true);
+                break;
+        }
+
+    })
+
 }
 
 function openDeleteModal(info) {
