@@ -6,22 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CalendarScheduler.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace CalendarScheduler.Controllers
 {
     public class LocationsController : Controller
     {
         private readonly CalendarSchedulerContext _context;
-
-        public LocationsController(CalendarSchedulerContext context)
+        private UserManager<IdentityUser> _userManager;
+        private String _currentUserId;
+        private IHttpContextAccessor _httpContext;
+        public LocationsController(CalendarSchedulerContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContext)
         {
             _context = context;
+            _userManager = userManager;
+            _httpContext = httpContext;
+            _currentUserId = _userManager.GetUserId(httpContext.HttpContext.User);
         }
 
         // GET: Locations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Locations.ToListAsync());
+            return View(await _context.Locations.Where(m => m.UserId == _currentUserId).ToListAsync());
         }
 
         // GET: Locations/Details/5
@@ -32,11 +39,18 @@ namespace CalendarScheduler.Controllers
                 return NotFound();
             }
 
+
             var location = await _context.Locations
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (location == null)
             {
                 return NotFound();
+            }
+
+            if(location.UserId != _currentUserId)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+
             }
 
             return View(location);
@@ -57,6 +71,7 @@ namespace CalendarScheduler.Controllers
         {
             if (ModelState.IsValid)
             {
+                location.UserId = _currentUserId;
                 _context.Add(location);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -77,6 +92,12 @@ namespace CalendarScheduler.Controllers
             {
                 return NotFound();
             }
+
+            if (location.UserId != _currentUserId)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+
+            }
             return View(location);
         }
 
@@ -96,6 +117,7 @@ namespace CalendarScheduler.Controllers
             {
                 try
                 {
+                    location.UserId = _currentUserId;
                     _context.Update(location);
                     await _context.SaveChangesAsync();
                 }
