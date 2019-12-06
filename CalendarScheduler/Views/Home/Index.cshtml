@@ -41,15 +41,15 @@
                     </div>
                     <label>Recurrence</label>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="daily" name="Recurrence" class="custom-control-input">
+                        <input type="radio" id="daily" name="Recurrence" onclick="showRecurrences()" class="custom-control-input">
                         <label class="custom-control-label" for="daily">Daily</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="weekly" name="Recurrence" class="custom-control-input">
+                        <input type="radio" id="weekly" name="Recurrence" onclick="showRecurrences()" class="custom-control-input">
                         <label class="custom-control-label" for="weekly">Weekly</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="none" name="Recurrence" class="custom-control-input">
+                        <input type="radio" id="none" name="Recurrence" onclick="hideRecurrences()" class="custom-control-input">
                         <label class="custom-control-label" for="none">None</label>
                     </div>
                     <div id="recur-box" class="d-flex flex-column">
