@@ -31,29 +31,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		eventDrop: function (info) {
 			event = info.event;
             var appt = {}
-				appt.AppointmentId = event.id
-				appt.title = event.title
-				appt.description = event.extendedProps.description
-				appt.location = event.extendedProps.location
-                appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
-                appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
-				appt.recurrence= event.extendedProps.recurrence
+            appt.AppointmentId = event.id;
+            appt.title = event.title;
+            appt.description = event.extendedProps.description;
+            appt.location = event.extendedProps.location;
+            appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+            appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+            appt.created = event.extendedProps.created;
+            appt.modified = event.extendedProps.modified;
+            appt.userId = event.extendedProps.userId;
+            appt.backgroundColor = event.backgroundColor;
+
+            if (event.daysOfWeek != undefined) {
+                appt.recurrence = event.daysOfWeek;
+                appt.endRecurrence = moment(event.endRecur).format("M/D/YYYY h:mm A");
+            } else {
+                appt.recurrence = null;
+                appt.endRecurrence = null;
+            }
 
 			updateAppointment(appt);
 		},
 		eventResize: function (info) {
-			event = info.event;
-			var appt = {
-				AppointmentId: event.id,
-				title: event.title,
-				description: event.extendedProps.description,
-				location: event.extendedProps.location,
-                startTime: moment(event.start).format("M/D/YYYY h:mm A"),
-                endTime: moment(event.end).format("M/D/YYYY h:mm A"),
-                recurrence: event.extendedProps.recurrence,
-                endRecurrence: event.endRecur
-			};
-			updateAppointment(appt);
+            event = info.event;
+            var appt = {}
+            appt.AppointmentId = event.id;
+            appt.title = event.title;
+            appt.description = event.extendedProps.description;
+            appt.location = event.extendedProps.location;
+            appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+            appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+            appt.created = event.extendedProps.created;
+            appt.modified = event.extendedProps.modified;
+            appt.userId = event.extendedProps.userId;
+            appt.backgroundColor = event.backgroundColor;
+
+            if (event.daysOfWeek != undefined) {
+                appt.recurrence = event.daysOfWeek;
+                appt.endRecurrence = moment(event.endRecur).format("M/D/YYYY h:mm A");
+            } else {
+                appt.recurrence = null;
+                appt.endRecurrence = null;
+            }
+
+            updateAppointment(appt);
 		},
 		datesRender: function (info) {
 			$.contextMenu({
@@ -153,7 +174,8 @@ function getAppointments() {
                 location: el.location,
                 created: el.created,
                 modified: el.modified,
-                userId: el.userId
+                userId: el.userId,
+                backgroundColor: el.backgroundColor,
             }
 
             if (el.reccurence != undefined) {
@@ -195,7 +217,8 @@ function createAppointment(appoint) {
             location: data.location,
             created: data.created,
             modified: data.modified,
-            userId: data.userId
+            userId: data.userId,
+            backgroundColor: el.backgroundColor,
         }
 
         if (data.reccurence != undefined) {
@@ -217,7 +240,6 @@ function updateAppointment(appoint) {
         method: 'POST',
         data: appoint
     }).done(function (data) {
-
         var ev = {
             id: data.appointmentId,
             title: data.title,
@@ -226,10 +248,16 @@ function updateAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
-            recurrence: data.recurrence,
             created: data.created,
             modified: data.modified,
-            userId: data.userId
+            userId: data.userId,
+            backgroundColor: el.backgroundColor,
+        }
+
+        if (data.reccurence != undefined) {
+            ev.daysOfWeek = data.reccurence.split(',').map(Number);
+            ev.startRecur = new Date(data.startTime);
+            ev.endRecur = new Date(data.endRecurrence);
         }
 
         calendar.getEventById(ev.id).remove();

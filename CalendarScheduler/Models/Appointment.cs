@@ -32,6 +32,6 @@ namespace CalendarScheduler.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public virtual IdentityUser User { get; set; }
-
+        public string BackgroundColor { get; set; }
     }
 }

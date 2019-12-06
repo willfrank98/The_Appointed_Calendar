@@ -89,6 +89,9 @@ namespace CalendarScheduler.Controllers
             else
                 appointment.EndRecurrence = null;
 
+            var color = _context.Locations.Where(l => l.Name == Location).FirstOrDefault().Color;
+            appointment.BackgroundColor = color;
+
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
@@ -121,7 +124,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId,BackgroundColor")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {

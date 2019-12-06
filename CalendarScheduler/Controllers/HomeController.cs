@@ -28,13 +28,13 @@ namespace CalendarScheduler.Controllers
 			// get/creates items for Locations dropdown
 			ViewBag.Locations = _context.Locations.Select(l => new SelectListItem {
 				Text = l.Name,
-				Value = "" + l.ID
+				Value = l.Name
 			}).ToList();
    
 			// get/creates items for Categories dropdown
 			ViewBag.Categories = _context.Categories.Select(l => new SelectListItem {
 				Text = l.Name,
-				Value = "" + l.ID
+				Value = l.Name
 			}).ToList();
 			return View();
 		}
