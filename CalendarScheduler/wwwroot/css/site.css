@@ -109,3 +109,6 @@ dd{
     height: 27px;
     border-width: 3px !important;
 }
+#recur-box, #recur-box-edit{
+    display: block;
+}

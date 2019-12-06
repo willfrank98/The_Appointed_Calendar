@@ -367,8 +367,19 @@ function openEditModal(event) {
         $("#editDescription").val(event.extendedProps.description);
         $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
         $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+        $("#noneedit").prop('checked', true);
+        $("#editendRecur").val('Select Date');
+        $("#recur-box-edit").hide();
     }
     else {
+        $("#apptId").val(event.id);
+        $("#editTitle").val(event.title);
+        $("#editLocation").val(event.extendedProps.location);
+        $("#editCategory").val(event.extendedProps.category);
+        $("#editDescription").val(event.extendedProps.description);
+        $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
+        $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+        $("#recur-box-edit").show();
 
     }
     $("#editModal").modal('show');
@@ -397,11 +408,13 @@ function getEventEdit(id) {
 }
 
 function hideRecurrences() {
-    $('#recur-box').css('visibility', 'hidden')
+    $('#recur-box').hide()
+    $("#recur-box-edit").hide()
 }
 
 function showRecurrences() {
-    $('#recur-box').css('visibility', 'initial')
+    $('#recur-box').show()
+    $("#recur-box-edit").show()
 }
 
 // ******************* PRIVATE ************************ //

@@ -52,7 +52,7 @@
                         <input type="radio" id="none" name="Recurrence" onclick="hideRecurrences()" class="custom-control-input">
                         <label class="custom-control-label" for="none">None</label>
                     </div>
-                    <div id="recur-box" class="d-flex flex-column">
+                    <div id="recur-box" class="">
                         <label>Weekdays to Recur</label>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day0check" value="0">
@@ -187,26 +187,26 @@
                     </div>
                     <label>Recurrence</label>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="dailyedit" name="Recurrence" onclick="showRecurrences()" class="custom-control-input">
-                        <label class="custom-control-label" for="daily">Daily</label>
+                        <input type="radio" id="dailyedit" name="RecurrenceEdit" onclick="showRecurrences()" class="custom-control-input">
+                        <label class="custom-control-label" for="dailyedit">Daily</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="weeklyedit" name="Recurrence" onclick="showRecurrences()" class="custom-control-input">
-                        <label class="custom-control-label" for="weekly">Weekly</label>
+                        <input type="radio" id="weeklyedit" name="RecurrenceEdit" onclick="showRecurrences()" class="custom-control-input">
+                        <label class="custom-control-label" for="weeklyedit">Weekly</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="noneedit" name="Recurrence" onclick="hideRecurrences()" class="custom-control-input">
-                        <label class="custom-control-label" for="none">None</label>
+                        <input type="radio" id="noneedit" name="RecurrenceEdit" onclick="hideRecurrences()" class="custom-control-input">
+                        <label class="custom-control-label" for="noneedit">None</label>
                     </div>
-                    <div id="recur-box" class="d-flex flex-column">
+                    <div id="recur-box-edit" class="">
                         <label>Weekdays to Recur</label>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day0checkedit" value="0">
-                            <label class="form-check-label" for="day0check">Sunday</label>
+                            <label class="form-check-label" for="day0checkedit">Sunday</label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day1checkedit" value="1">
-                            <label class="form-check-label" for="day1check">Monday</label>
+                            <label class="form-check-label" for="day1checkedit">Monday</label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day2checkedit" value="2">
@@ -214,19 +214,19 @@
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day3checkedit" value="3">
-                            <label class="form-check-label" for="day3check">Wednesday</label>
+                            <label class="form-check-label" for="day3checkedit">Wednesday</label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day4checkedit" value="4">
-                            <label class="form-check-label" for="day4check">Thursday</label>
+                            <label class="form-check-label" for="day4checkedit">Thursday</label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day5checkedit" value="5">
-                            <label class="form-check-label" for="day5check">Friday</label>
+                            <label class="form-check-label" for="day5checkedit">Friday</label>
                         </div>
                         <div class="form-check form-check">
                             <input class="form-check-input" type="checkbox" id="day6checkedit" value="6">
-                            <label class="form-check-label" for="day6check">Saturday</label>
+                            <label class="form-check-label" for="day6checkedit">Saturday</label>
                         </div>
                         <div class="form-group">
                             <label for="endtime">Recurrence End Time</label>
