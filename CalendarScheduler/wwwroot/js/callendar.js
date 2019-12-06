@@ -325,7 +325,7 @@ function openViewModal(info) {
         $("#viewModal .modal-title").html(info.event.title);
         $("#event-desc").html(info.event.extendedProps.description);
         $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
-        $("#event-time").html(moment(info.event.extendedProps.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.extendedProps.end).format('M/D/YY h:mm a'));
+        $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
         $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
         $("#event-recur").html('No Recurrences');
         $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
