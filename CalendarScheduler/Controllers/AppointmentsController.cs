@@ -51,7 +51,7 @@ namespace CalendarScheduler.Controllers
             }
 
             var appointment = await _context.Appointment
-                .Include(a => a.User)
+                .Where(a => a.UserId == _currentUserId)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {
@@ -89,8 +89,8 @@ namespace CalendarScheduler.Controllers
             else
                 appointment.EndRecurrence = null;
 
-            var color = _context.Locations.Where(l => l.Name == Location).FirstOrDefault().Color;
-            appointment.BackgroundColor = color;
+            var color = await _context.Locations.Where(l => l.Name == Location).FirstOrDefaultAsync();
+            appointment.BackgroundColor = color.Color;
 
             if (ModelState.IsValid)
             {
@@ -165,7 +165,7 @@ namespace CalendarScheduler.Controllers
             }
 
             var appointment = await _context.Appointment
-                .Include(a => a.User)
+                .Where(a => a.UserId == _currentUserId)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {

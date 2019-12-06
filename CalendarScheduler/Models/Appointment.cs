@@ -29,9 +29,7 @@ namespace CalendarScheduler.Models
         public DateTime Created { get; set; }
         [Required]
         public DateTime Modified { get; set; }
-        [ForeignKey("User")]
         public string UserId { get; set; }
-        public virtual IdentityUser User { get; set; }
         public string BackgroundColor { get; set; }
     }
 }
