@@ -326,6 +326,14 @@ function getEventEdit(id) {
     openEditModal(calendar.getEventById(id))
 }
 
+function hideRecurrences() {
+    $('#recur-box').css('visibility', 'hidden')
+}
+
+function showRecurrences() {
+    $('#recur-box').css('visibility', 'initial')
+}
+
 // ******************* PRIVATE ************************ //
 
 // In the event that we need to pull the date portion of the Date Objects arriving from the server
