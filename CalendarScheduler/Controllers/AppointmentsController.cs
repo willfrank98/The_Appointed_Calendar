@@ -37,7 +37,7 @@ namespace CalendarScheduler.Controllers
 
         public JsonResult GetAppointments()
         {
-            var appointments = _context.Appointment.ToList();
+            var appointments = _context.Appointment.Where(m => m.UserId == _currentUserId).ToList();
 
             return Json(appointments);
         }
@@ -82,7 +82,7 @@ namespace CalendarScheduler.Controllers
             appointment.StartTime = DateTime.Parse(StartTime);
             appointment.EndTime = DateTime.Parse(EndTime);
             appointment.UserId = _currentUserId;
-            appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            //appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
@@ -126,6 +126,7 @@ namespace CalendarScheduler.Controllers
             {
                 try
                 {
+                    appointment.UserId = _currentUserId;
 					_context.Appointment.Update(appointment);
 					await _context.SaveChangesAsync();
                 }
