@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				location: event.extendedProps.location,
                 startTime: moment(event.start).format("M/D/YYYY h:mm A"),
                 endTime: moment(event.end).format("M/D/YYYY h:mm A"),
-				recurrence: event.extendedProps.recurrence,
+                recurrence: event.extendedProps.recurrence,
+                endRecurrence: event.endRecur
 			};
 			updateAppointment(appt);
 		},
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
             appointment.startRecur = appointment.startTime;
-            appointment.endRecur = $("endRecur").val();
+            appointment.endRecur = $("#endRecur").val();
         }
 		createAppointment(appointment);
 	})
@@ -150,7 +151,9 @@ function getAppointments() {
                 editable: true,
                 description: el.description,
                 location: el.location,
-                recurrence: el.recurrence,
+                daysOfWeek: el.reccurence.split(',').map(Number),
+                startRecur: new Date(el.startTime),
+                endRecur: new Date(el.endRecurrence),
                 created: el.created,
                 modified: el.modified,
                 userId: el.userId
@@ -170,7 +173,8 @@ function createAppointment(appoint) {
         Description: appoint.description,
         StartTime: appoint.startTime,
         EndTime: appoint.endTime,
-        Recurrence: appoint.recur,
+        Recurrence: appoint.daysOfWeek.join(),
+        EndRecurrence: appoint.endRecur
     }
     $.ajax({
         url: '/Appointments/Create',
@@ -186,7 +190,9 @@ function createAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
-            recurrence: data.recurrence,
+            daysOfWeek: data.reccurence.split(',').map(Number),
+            startRecur: new Date(data.startTime),
+            endRecur: new Date(data.endRecurrence),
             created: data.created,
             modified: data.modified,
             userId: data.userId
