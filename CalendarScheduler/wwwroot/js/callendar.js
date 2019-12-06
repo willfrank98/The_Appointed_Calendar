@@ -103,12 +103,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		appointment.startTime = $("#starttime").val();
         appointment.endTime = $("#endtime").val();
         var recur = $("input[name='Recurrence']:checked")[0].id;
+        appointment.daysOfWeek = [];
         if (recur != "none") {
             if (recur == "daily") {
                 appointment.daysOfWeek = [0,1,2,3,4,5,6]
             }
             else if (recur == "weekly") {
-                appointment.daysOfWeek = [];
                 $('input[type="checkbox"]').each((i, el) => {
                     if (el.checked) {
                         appointment.daysOfWeek.push(i);
@@ -151,12 +151,15 @@ function getAppointments() {
                 editable: true,
                 description: el.description,
                 location: el.location,
-                daysOfWeek: el.reccurence.split(',').map(Number),
-                startRecur: new Date(el.startTime),
-                endRecur: new Date(el.endRecurrence),
                 created: el.created,
                 modified: el.modified,
                 userId: el.userId
+            }
+
+            if (el.reccurence != undefined) {
+                ev.daysOfWeek = el.reccurence.split(',').map(Number);
+                ev.startRecur = new Date(el.startTime);
+                ev.endRecur = new Date(el.endRecurrence);
             }
             calendar.addEvent(ev)
         })
@@ -190,13 +193,17 @@ function createAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
-            daysOfWeek: data.reccurence.split(',').map(Number),
-            startRecur: new Date(data.startTime),
-            endRecur: new Date(data.endRecurrence),
             created: data.created,
             modified: data.modified,
             userId: data.userId
         }
+
+        if (data.reccurence != undefined) {
+            ev.daysOfWeek = data.reccurence.split(',').map(Number);
+            ev.startRecur = new Date(data.startTime);
+            ev.endRecur = new Date(data.endRecurrence);
+        }
+
         calendar.addEvent(ev)
     }).fail(function (error) {
         alert("Error creating appointment");

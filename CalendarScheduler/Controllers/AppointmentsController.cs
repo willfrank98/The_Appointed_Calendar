@@ -84,7 +84,11 @@ namespace CalendarScheduler.Controllers
             appointment.UserId = _currentUserId;
             //appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             appointment.Reccurence = Recurrence;
-            appointment.EndRecurrence = DateTime.Parse(EndRecurrence);
+            if (EndRecurrence != null)
+                appointment.EndRecurrence = DateTime.Parse(EndRecurrence);
+            else
+                appointment.EndRecurrence = null;
+
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
