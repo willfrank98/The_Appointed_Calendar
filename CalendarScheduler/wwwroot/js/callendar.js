@@ -181,13 +181,15 @@ function getAppointments() {
                 modified: el.modified,
                 userId: el.userId,
                 backgroundColor: el.backgroundColor,
-                borderColor: el.borderColor
+                borderColor: el.borderColor,
+                reccurence: el.reccurence
             }
 
             if (el.reccurence != undefined) {
                 ev.daysOfWeek = el.reccurence.split(',').map(Number);
                 ev.startRecur = new Date(el.startTime);
                 ev.endRecur = new Date(el.endRecurrence);
+                ev.groupId = ev.id
             }
             calendar.addEvent(ev)
         })
@@ -227,7 +229,8 @@ function createAppointment(appoint) {
             modified: data.modified,
             userId: data.userId,
             backgroundColor: data.backgroundColor,
-            borderColor: data.borderColor
+            borderColor: data.borderColor,
+            reccurence: data.reccurence
         }
 
         if (data.reccurence != undefined) {
@@ -236,6 +239,7 @@ function createAppointment(appoint) {
             ev.endRecur = new Date(data.endRecurrence);
         }
 
+        console.log(ev)
         calendar.addEvent(ev)
     }).fail(function (error) {
         alert("Error creating appointment");
@@ -262,7 +266,8 @@ function updateAppointment(appoint) {
             modified: data.modified,
             userId: data.userId,
             backgroundColor: data.backgroundColor,
-            borderColor: data.borderColor
+            borderColor: data.borderColor,
+            recurrence: data.recurrence
         }
 
         if (data.reccurence != undefined) {
@@ -293,14 +298,63 @@ function deleteAppointment() {
 // ********************* Modals ************************ //
 
 function openViewModal(info) {
-    console.log(info.event)
-    $("#viewModal .modal-title").html(info.event.title);
-    $("#event-desc").html(info.event.extendedProps.description);
-    $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
-    $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
-    $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
-    $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
+    console.log(info)
+    if (!info.event.extendedProps.reccurence) {
+        $("#viewModal .modal-title").html(info.event.title);
+        $("#event-desc").html(info.event.extendedProps.description);
+        $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+        $("#event-time").html(moment(info.event.extendedProps.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.extendedProps.end).format('M/D/YY h:mm a'));
+        $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
+        $("#event-recur").html('No Recurrences');
+        $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
+    }
+    else {
+        $("#viewModal .modal-title").html(info.event.title);
+        $("#event-desc").html(info.event.extendedProps.description);
+        $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+        $("#event-time").html(moment(info.event.extendedProps.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.extendedProps.end).format('M/D/YY h:mm a'));
+        $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
+        var r = getReccurenceDays(info.event.extendedProps.reccurence)
+        $("#event-recur").html(r + "<br>Until: " + moment(info.event.endRecur).format('M/D/YY h:mm a'));
+        $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
+    }
     $("#viewModal").modal('show');
+}
+
+function getReccurenceDays(nums) {
+    var numbers = nums.split(',');
+    var days = "";
+    if (numbers.length == 7) {
+        return "Daily";
+    }
+    $.each(numbers, function (k, v) {
+
+        switch (v) {
+            case 0:
+                days += 'Monday ';
+                break;
+            case 1:
+                days += 'Tuesday ';
+                break;
+            case 2:
+                days += 'Wednesday ';
+                break;
+            case 3:
+                days += 'Thursday ';
+                break;
+            case 4:
+                days += 'Friday ';
+                break;
+            case 5:
+                days += 'Saturday ';
+                break;
+            case 6:
+                days += 'Sunday ';
+                break;
+        }
+
+    })
+    return days;
 }
 
 function openEditModal(event) {
@@ -315,7 +369,6 @@ function openEditModal(event) {
 }
 
 function openDeleteModal(info) {
-    console.log(info.event)
     $("#deleteModal .modal-title").html(info.event.title);
     $("#deleteModalEventId").html(info.event.id);
     $("#deleteModal").modal('show');
