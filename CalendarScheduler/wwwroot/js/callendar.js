@@ -191,6 +191,7 @@ function getAppointments() {
                 ev.endRecur = new Date(el.endRecurrence);
                 ev.groupId = ev.id
             }
+            console.log(el)
             calendar.addEvent(ev)
         })
         calendar.render();
@@ -267,7 +268,7 @@ function updateAppointment(appoint) {
             userId: data.userId,
             backgroundColor: data.backgroundColor,
             borderColor: data.borderColor,
-            recurrence: data.recurrence
+            reccurence: data.reccurence
         }
 
         if (data.reccurence != undefined) {
@@ -315,7 +316,7 @@ function openViewModal(info) {
         $("#event-time").html(moment(info.event.extendedProps.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.extendedProps.end).format('M/D/YY h:mm a'));
         $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
         var r = getReccurenceDays(info.event.extendedProps.reccurence)
-        $("#event-recur").html(r + "<br>Until: " + moment(info.event.endRecur).format('M/D/YY h:mm a'));
+        $("#event-recur").html(r);
         $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
     }
     $("#viewModal").modal('show');
@@ -358,13 +359,18 @@ function getReccurenceDays(nums) {
 }
 
 function openEditModal(event) {
-    $("#apptId").val(event.id);
-    $("#editTitle").val(event.title);
-    $("#editLocation").val(event.extendedProps.location);
-    $("#editCategory").val(event.extendedProps.category);
-    $("#editDescription").val(event.extendedProps.description);
-    $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
-    $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+    if (event.extendedProps.reccurence != undefined) {
+        $("#apptId").val(event.id);
+        $("#editTitle").val(event.title);
+        $("#editLocation").val(event.extendedProps.location);
+        $("#editCategory").val(event.extendedProps.category);
+        $("#editDescription").val(event.extendedProps.description);
+        $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
+        $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+    }
+    else {
+
+    }
     $("#editModal").modal('show');
 }
 
