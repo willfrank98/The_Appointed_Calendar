@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
             appt.title = event.title;
             appt.description = event.extendedProps.description;
             appt.location = event.extendedProps.location;
+            appt.category = event.extendedProps.category;
             appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
             appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
             appt.created = event.extendedProps.created;
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
             appt.title = event.title;
             appt.description = event.extendedProps.description;
             appt.location = event.extendedProps.location;
+            appt.category = event.extendedProps.category;
             appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
             appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
             appt.created = event.extendedProps.created;
@@ -119,7 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$("#add-form-submit").on('click', function () {
         var appointment = {}
 		appointment.title = $("#addTitle").val();
-		appointment.location = $("#addLocation").val();
+        appointment.location = $("#addLocation").val();
+        appointment.category = $("#addCategory").val();
 		appointment.description = $("#addDescription").val();
 		appointment.startTime = $("#starttime").val();
         appointment.endTime = $("#endtime").val();
@@ -150,6 +153,7 @@ $("#edit-form-submit").on('click', function () {
     appointment.AppointmentId = $("#apptId").val();
     appointment.title = $("#editTitle").val();
     appointment.location = $("#editLocation").val();
+    appointment.category = $("#editCategory").val();
     appointment.description = $("#editDescription").val();
     appointment.startTime = $("#editStart").val();
     appointment.endTime = $("#editEnd").val();
@@ -172,10 +176,12 @@ function getAppointments() {
                 editable: true,
                 description: el.description,
                 location: el.location,
+                category: el.category,
                 created: el.created,
                 modified: el.modified,
                 userId: el.userId,
                 backgroundColor: el.backgroundColor,
+                borderColor: el.borderColor
             }
 
             if (el.reccurence != undefined) {
@@ -184,7 +190,6 @@ function getAppointments() {
                 ev.endRecur = new Date(el.endRecurrence);
             }
             calendar.addEvent(ev)
-            console.log(calendar.getEventById(ev.id))
         })
         calendar.render();
     }).fail(function (error) {
@@ -196,6 +201,7 @@ function createAppointment(appoint) {
     data = {
         Title: appoint.title,
         Location: appoint.location,
+        category: appoint.category,
         Description: appoint.description,
         StartTime: appoint.startTime,
         EndTime: appoint.endTime,
@@ -216,6 +222,7 @@ function createAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
+            category: data.category,
             created: data.created,
             modified: data.modified,
             userId: data.userId,
@@ -249,6 +256,7 @@ function updateAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
+            category: data.category,
             created: data.created,
             modified: data.modified,
             userId: data.userId,
@@ -288,7 +296,7 @@ function openViewModal(info) {
     $("#event-desc").html(info.event.extendedProps.description);
     $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
     $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
-    $("#event-cat").html(info.event.category ? info.event.category : 'No category');
+    $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
     $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
     $("#viewModal").modal('show');
 }

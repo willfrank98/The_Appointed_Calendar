@@ -105,3 +105,7 @@ dd{
     position: fixed;
     right: 0;
 }
+.fc-day-grid-event{
+    height: 27px;
+    border-width: 3px !important;
+}

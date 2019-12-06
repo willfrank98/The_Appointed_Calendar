@@ -73,7 +73,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create(String Title, String Location, String Description, String StartTime, String EndTime, String Recurrence, String EndRecurrence)
+        public async Task<JsonResult> Create(String Title, String Location, String Category, String Description, String StartTime, String EndTime, String Recurrence, String EndRecurrence)
         {
             Appointment appointment = new Appointment();
             appointment.Description = Description;
@@ -91,6 +91,9 @@ namespace CalendarScheduler.Controllers
 
             var color = await _context.Locations.Where(l => l.Name == Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
             appointment.BackgroundColor = color.Color;
+
+            var border = await _context.Categories.Where(c => c.Name == Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
+            appointment.BorderColor = border.Color;
 
             if (ModelState.IsValid)
             {
@@ -124,7 +127,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId,BackgroundColor")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location, Category,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId,BackgroundColor,BorderColor")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {
@@ -136,7 +139,14 @@ namespace CalendarScheduler.Controllers
                 try
                 {
                     appointment.UserId = _currentUserId;
-					_context.Appointment.Update(appointment);
+
+                    var color = await _context.Locations.Where(l => l.Name == appointment.Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
+                    appointment.BackgroundColor = color.Color;
+
+                    var border = await _context.Categories.Where(c => c.Name == appointment.Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
+                    appointment.BorderColor = border.Color;
+
+                    _context.Appointment.Update(appointment);
 					await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
