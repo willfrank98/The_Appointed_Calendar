@@ -37,7 +37,7 @@ namespace CalendarScheduler.Controllers
 
         public JsonResult GetAppointments()
         {
-            var appointments = _context.Appointment.ToList();
+            var appointments = _context.Appointment.Where(m => m.UserId == _currentUserId).ToList();
 
             return Json(appointments);
         }
@@ -73,7 +73,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create(String Title, String Location, String Description, String StartTime, String EndTime)
+        public async Task<JsonResult> Create(String Title, String Location, String Description, String StartTime, String EndTime, String Recurrence, String EndRecurrence)
         {
             Appointment appointment = new Appointment();
             appointment.Description = Description;
@@ -82,7 +82,13 @@ namespace CalendarScheduler.Controllers
             appointment.StartTime = DateTime.Parse(StartTime);
             appointment.EndTime = DateTime.Parse(EndTime);
             appointment.UserId = _currentUserId;
-            appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            //appointment.User = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            appointment.Reccurence = Recurrence;
+            if (EndRecurrence != null)
+                appointment.EndRecurrence = DateTime.Parse(EndRecurrence);
+            else
+                appointment.EndRecurrence = null;
+
             if (ModelState.IsValid)
             {
                 _context.Appointment.Add(appointment);
@@ -115,7 +121,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Reccurence,Created,Modified,UserId")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {
@@ -126,6 +132,7 @@ namespace CalendarScheduler.Controllers
             {
                 try
                 {
+                    appointment.UserId = _currentUserId;
 					_context.Appointment.Update(appointment);
 					await _context.SaveChangesAsync();
                 }

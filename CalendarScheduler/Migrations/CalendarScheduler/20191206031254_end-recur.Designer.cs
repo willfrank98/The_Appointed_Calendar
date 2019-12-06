@@ -4,14 +4,16 @@ using CalendarScheduler.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalendarScheduler.Migrations.CalendarScheduler
 {
     [DbContext(typeof(CalendarSchedulerContext))]
-    partial class CalendarSchedulerContextModelSnapshot : ModelSnapshot
+    [Migration("20191206031254_end-recur")]
+    partial class endrecur
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +34,8 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EndRecurrence")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("EndRecurrence")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -77,9 +79,6 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.ToTable("Categories");
@@ -96,9 +95,6 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");

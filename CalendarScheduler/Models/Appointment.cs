@@ -23,6 +23,7 @@ namespace CalendarScheduler.Models
         [Required]
         public DateTime EndTime { get; set; }
         public string Reccurence { get; set; }
+        public DateTime? EndRecurrence { get; set; }
 
         [Required]
         public DateTime Created { get; set; }

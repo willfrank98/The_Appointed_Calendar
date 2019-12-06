@@ -30,33 +30,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		eventDrop: function (info) {
 			event = info.event;
-			var appt = {
-				AppointmentId: event.id,
-				Title: event.title,
-				Description: event.extendedProps.description,
-				Location: event.extendedProps.location,
-				StartTime: event.start,
-				EndTime: event.end,
-				Recurrence: event.extendedProps.recurrence,
-				Created: event.extendedProps.created,
-				Modified: event.extendedProps.modified,
-				UserId: event.extendedProps.userId,
-			};
+            var appt = {}
+				appt.AppointmentId = event.id
+				appt.title = event.title
+				appt.description = event.extendedProps.description
+				appt.location = event.extendedProps.location
+                appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+                appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+				appt.recurrence= event.extendedProps.recurrence
+
 			updateAppointment(appt);
 		},
 		eventResize: function (info) {
 			event = info.event;
 			var appt = {
 				AppointmentId: event.id,
-				Title: event.title,
-				Description: event.extendedProps.description,
-				Location: event.extendedProps.location,
-				StartTime: event.start,
-				EndTime: event.end,
-				Recurrence: event.extendedProps.recurrence,
-				Created: event.extendedProps.created,
-				Modified: event.extendedProps.modified,
-				UserId: event.extendedProps.userId,
+				title: event.title,
+				description: event.extendedProps.description,
+				location: event.extendedProps.location,
+                startTime: moment(event.start).format("M/D/YYYY h:mm A"),
+                endTime: moment(event.end).format("M/D/YYYY h:mm A"),
+                recurrence: event.extendedProps.recurrence,
+                endRecurrence: event.endRecur
 			};
 			updateAppointment(appt);
 		},
@@ -106,7 +101,23 @@ document.addEventListener('DOMContentLoaded', function () {
 		appointment.location = $("#addLocation").val();
 		appointment.description = $("#addDescription").val();
 		appointment.startTime = $("#starttime").val();
-		appointment.endTime = $("#endtime").val();
+        appointment.endTime = $("#endtime").val();
+        var recur = $("input[name='Recurrence']:checked")[0].id;
+        appointment.daysOfWeek = [];
+        if (recur != "none") {
+            if (recur == "daily") {
+                appointment.daysOfWeek = [0,1,2,3,4,5,6]
+            }
+            else if (recur == "weekly") {
+                $('input[type="checkbox"]').each((i, el) => {
+                    if (el.checked) {
+                        appointment.daysOfWeek.push(i);
+                    }
+                });
+            }
+            appointment.startRecur = appointment.startTime;
+            appointment.endRecur = $("#endRecur").val();
+        }
 		createAppointment(appointment);
 	})
 });
@@ -140,10 +151,15 @@ function getAppointments() {
                 editable: true,
                 description: el.description,
                 location: el.location,
-                recurrence: el.recurrence,
                 created: el.created,
                 modified: el.modified,
                 userId: el.userId
+            }
+
+            if (el.reccurence != undefined) {
+                ev.daysOfWeek = el.reccurence.split(',').map(Number);
+                ev.startRecur = new Date(el.startTime);
+                ev.endRecur = new Date(el.endRecurrence);
             }
             calendar.addEvent(ev)
         })
@@ -154,17 +170,20 @@ function getAppointments() {
 }
 
 function createAppointment(appoint) {
+    data = {
+        Title: appoint.title,
+        Location: appoint.location,
+        Description: appoint.description,
+        StartTime: appoint.startTime,
+        EndTime: appoint.endTime,
+        Recurrence: appoint.daysOfWeek.join(),
+        EndRecurrence: appoint.endRecur
+    }
     $.ajax({
         url: '/Appointments/Create',
         method: 'POST',
         dataType: "json",
-        data: {
-            Title: appoint.title,
-            Location: appoint.location,
-            Description: appoint.description,
-            StartTime: appoint.startTime,
-            EndTime: appoint.endTime
-        }
+        data: data
     }).done(function (data) {
         var ev = {
             id: data.appointmentId,
@@ -174,11 +193,17 @@ function createAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
-            recurrence: data.recurrence,
             created: data.created,
             modified: data.modified,
             userId: data.userId
         }
+
+        if (data.reccurence != undefined) {
+            ev.daysOfWeek = data.reccurence.split(',').map(Number);
+            ev.startRecur = new Date(data.startTime);
+            ev.endRecur = new Date(data.endRecurrence);
+        }
+
         calendar.addEvent(ev)
     }).fail(function (error) {
         alert("Error creating appointment");
