@@ -6,22 +6,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CalendarScheduler.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace CalendarScheduler.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly CalendarSchedulerContext _context;
+        private UserManager<IdentityUser> _userManager;
+        private String _currentUserId;
+        private IHttpContextAccessor _httpContext;
 
-        public CategoriesController(CalendarSchedulerContext context)
+        public CategoriesController(CalendarSchedulerContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContext)
         {
             _context = context;
+            _userManager = userManager;
+            _httpContext = httpContext;
+            _currentUserId = _userManager.GetUserId(httpContext.HttpContext.User);
         }
 
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Categories.Where(m => m.UserId == _currentUserId).ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -37,6 +45,11 @@ namespace CalendarScheduler.Controllers
             if (category == null)
             {
                 return NotFound();
+            }
+
+            if(category.UserId != _currentUserId)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
             }
 
             return View(category);
@@ -55,6 +68,8 @@ namespace CalendarScheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name,Color")] Category category)
         {
+            category.UserId = _currentUserId;
+
             if (ModelState.IsValid)
             {
                 _context.Add(category);
@@ -72,10 +87,16 @@ namespace CalendarScheduler.Controllers
                 return NotFound();
             }
 
+
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
+            }
+
+            if(category.UserId != _currentUserId)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
             }
             return View(category);
         }
@@ -96,6 +117,7 @@ namespace CalendarScheduler.Controllers
             {
                 try
                 {
+                    category.UserId = _currentUserId;
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
