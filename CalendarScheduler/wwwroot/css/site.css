@@ -23,6 +23,9 @@ a {
 html {
   font-size: 14px;
 }
+body {
+    background-color: #fcfcfc;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -83,4 +86,21 @@ dd{
 }
 .btn, .btn:hover, .btn:focus, .btn:active{
     color: white;
+}
+
+.left-landing{
+    position: fixed;
+    width: 45%;
+    height: 100%;
+    left: 0;
+}
+.right-landing{
+    position: fixed;
+    width: 55%;
+    height: 100%;
+    right: 0;
+}
+.right-landing img{
+    max-width: 55%;
+    position: fixed;
 }
