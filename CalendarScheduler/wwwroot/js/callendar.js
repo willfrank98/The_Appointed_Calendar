@@ -174,7 +174,6 @@ $("#edit-form-submit").on('click', function () {
         appointment.EndRecurrence = $("#editendRecur").val();
         appointment.Reccurence = daysOfWeek.join()
     }
-    console.log(recur)
     updateAppointment(appointment);
 })
 
@@ -273,7 +272,6 @@ function updateAppointment(appoint) {
         method: 'POST',
         data: appoint
     }).done(function (data) {
-        console.log(data)
         var ev = {
             id: data.appointmentId,
             title: data.title,
@@ -298,7 +296,7 @@ function updateAppointment(appoint) {
             ev.endOfR = ev.endRecur;
             ev.groupId = ev.id;
         }
-        console.log(ev)
+        //console.log(ev)
         calendar.getEventById(ev.id).remove();
         calendar.addEvent(ev);
     });
