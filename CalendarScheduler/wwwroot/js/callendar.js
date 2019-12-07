@@ -31,29 +31,53 @@ document.addEventListener('DOMContentLoaded', function () {
 		eventDrop: function (info) {
 			event = info.event;
             var appt = {}
-				appt.AppointmentId = event.id
-				appt.title = event.title
-				appt.description = event.extendedProps.description
-				appt.location = event.extendedProps.location
-                appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
-                appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
-				appt.recurrence= event.extendedProps.recurrence
+            appt.AppointmentId = event.id;
+            appt.title = event.title;
+            appt.description = event.extendedProps.description;
+            appt.location = event.extendedProps.location;
+            appt.category = event.extendedProps.category;
+            appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+            appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+            appt.created = event.extendedProps.created;
+            appt.modified = event.extendedProps.modified;
+            appt.userId = event.extendedProps.userId;
+            appt.backgroundColor = event.backgroundColor;
 
+            if (event.extendedProps.reccurence != undefined) {
+                appt.reccurence = event.extendedProps.reccurence;
+                appt.startTime = moment(event.extendedProps.start).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
+                appt.endTime = moment(event.extendedProps.end).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
+                appt.endRecurrence = moment(event.extendedProps.endOfR).add(info.delta.days, 'days').format("M/D/YYYY h:mm A");
+            } else {
+                appt.reccurence = null;
+                appt.endRecurrence = null;
+            }
 			updateAppointment(appt);
 		},
 		eventResize: function (info) {
-			event = info.event;
-			var appt = {
-				AppointmentId: event.id,
-				title: event.title,
-				description: event.extendedProps.description,
-				location: event.extendedProps.location,
-                startTime: moment(event.start).format("M/D/YYYY h:mm A"),
-                endTime: moment(event.end).format("M/D/YYYY h:mm A"),
-                recurrence: event.extendedProps.recurrence,
-                endRecurrence: event.endRecur
-			};
-			updateAppointment(appt);
+            event = info.event;
+            var appt = {}
+            appt.AppointmentId = event.id;
+            appt.title = event.title;
+            appt.description = event.extendedProps.description;
+            appt.location = event.extendedProps.location;
+            appt.category = event.extendedProps.category;
+            appt.startTime = moment(event.start).format("M/D/YYYY h:mm A");
+            appt.endTime = moment(event.end).format("M/D/YYYY h:mm A");
+            appt.created = event.extendedProps.created;
+            appt.modified = event.extendedProps.modified;
+            appt.userId = event.extendedProps.userId;
+            appt.backgroundColor = event.backgroundColor;
+
+            if (event.daysOfWeek != undefined) {
+                appt.recurrence = event.daysOfWeek;
+                appt.endRecurrence = moment(event.endRecur).format("M/D/YYYY h:mm A");
+            } else {
+                appt.recurrence = null;
+                appt.endRecurrence = null;
+            }
+
+            updateAppointment(appt);
 		},
 		datesRender: function (info) {
 			$.contextMenu({
@@ -98,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$("#add-form-submit").on('click', function () {
         var appointment = {}
 		appointment.title = $("#addTitle").val();
-		appointment.location = $("#addLocation").val();
+        appointment.location = $("#addLocation").val();
+        appointment.category = $("#addCategory").val();
 		appointment.description = $("#addDescription").val();
 		appointment.startTime = $("#starttime").val();
         appointment.endTime = $("#endtime").val();
@@ -129,9 +154,27 @@ $("#edit-form-submit").on('click', function () {
     appointment.AppointmentId = $("#apptId").val();
     appointment.title = $("#editTitle").val();
     appointment.location = $("#editLocation").val();
+    appointment.category = $("#editCategory").val();
     appointment.description = $("#editDescription").val();
     appointment.startTime = $("#editStart").val();
     appointment.endTime = $("#editEnd").val();
+    var recur = $("input[name='RecurrenceEdit']:checked")[0].id;
+    var daysOfWeek = [];
+    if (recur != "noneedit") {
+        if (recur == "dailyedit") {
+            daysOfWeek = [0, 1, 2, 3, 4, 5, 6]
+        }
+        else if (recur == "weeklyedit") {
+            $('#editModal input[type="checkbox"]').each((i, el) => {
+                if (el.checked) {
+                    daysOfWeek.push(i);
+                }
+            });
+        }
+        appointment.EndRecurrence = $("#editendRecur").val();
+        appointment.Reccurence = daysOfWeek.join()
+    }
+    console.log(recur)
     updateAppointment(appointment);
 })
 
@@ -151,15 +194,21 @@ function getAppointments() {
                 editable: true,
                 description: el.description,
                 location: el.location,
+                category: el.category,
                 created: el.created,
                 modified: el.modified,
-                userId: el.userId
+                userId: el.userId,
+                backgroundColor: el.backgroundColor,
+                borderColor: el.borderColor,
+                reccurence: el.reccurence
             }
 
             if (el.reccurence != undefined) {
                 ev.daysOfWeek = el.reccurence.split(',').map(Number);
                 ev.startRecur = new Date(el.startTime);
                 ev.endRecur = new Date(el.endRecurrence);
+                ev.endOfR = ev.endRecur;
+                ev.groupId = ev.id
             }
             calendar.addEvent(ev)
         })
@@ -173,6 +222,7 @@ function createAppointment(appoint) {
     data = {
         Title: appoint.title,
         Location: appoint.location,
+        category: appoint.category,
         Description: appoint.description,
         StartTime: appoint.startTime,
         EndTime: appoint.endTime,
@@ -193,15 +243,21 @@ function createAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
+            category: data.category,
             created: data.created,
             modified: data.modified,
-            userId: data.userId
+            userId: data.userId,
+            backgroundColor: data.backgroundColor,
+            borderColor: data.borderColor,
+            reccurence: data.reccurence
         }
 
         if (data.reccurence != undefined) {
             ev.daysOfWeek = data.reccurence.split(',').map(Number);
             ev.startRecur = new Date(data.startTime);
             ev.endRecur = new Date(data.endRecurrence);
+            ev.endOfR = ev.endRecur;
+            ev.groupId = ev.id
         }
 
         calendar.addEvent(ev)
@@ -217,7 +273,7 @@ function updateAppointment(appoint) {
         method: 'POST',
         data: appoint
     }).done(function (data) {
-
+        console.log(data)
         var ev = {
             id: data.appointmentId,
             title: data.title,
@@ -226,12 +282,23 @@ function updateAppointment(appoint) {
             editable: true,
             description: data.description,
             location: data.location,
-            recurrence: data.recurrence,
+            category: data.category,
             created: data.created,
             modified: data.modified,
-            userId: data.userId
+            userId: data.userId,
+            backgroundColor: data.backgroundColor,
+            borderColor: data.borderColor,
+            reccurence: data.reccurence
         }
 
+        if (data.reccurence != undefined) {
+            ev.daysOfWeek = data.reccurence.split(',').map(Number);
+            ev.startRecur = new Date(data.startTime);
+            ev.endRecur = new Date(data.endRecurrence);
+            ev.endOfR = ev.endRecur;
+            ev.groupId = ev.id;
+        }
+        console.log(ev)
         calendar.getEventById(ev.id).remove();
         calendar.addEvent(ev);
     });
@@ -254,29 +321,132 @@ function deleteAppointment() {
 // ********************* Modals ************************ //
 
 function openViewModal(info) {
-    console.log(info.event)
-    $("#viewModal .modal-title").html(info.event.title);
-    $("#event-desc").html(info.event.extendedProps.description);
-    $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
-    $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
-    $("#event-cat").html(info.event.category ? info.event.category : 'No category');
-    $("#goEditBtn").attr('onclick', 'getEventEdit('+info.event.id+')');
+    if (!info.event.extendedProps.reccurence) {
+        $("#viewModal .modal-title").html(info.event.title);
+        $("#event-desc").html(info.event.extendedProps.description);
+        $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+        $("#event-time").html(moment(info.event.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.end).format('M/D/YY h:mm a'));
+        $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
+        $("#event-recur").html('No Recurrences');
+        $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
+    }
+    else {
+        $("#viewModal .modal-title").html(info.event.title);
+        $("#event-desc").html(info.event.extendedProps.description);
+        $("#event-loc").html(info.event.extendedProps.location ? info.event.extendedProps.location : 'No location');
+        $("#event-time").html(moment(info.event.extendedProps.start).format('M/D/YY h:mm a') + '<br>' + moment(info.event.extendedProps.end).format('M/D/YY h:mm a'));
+        $("#event-cat").html(info.event.extendedProps.category ? info.event.extendedProps.category : 'No category');
+        var r = getReccurenceDays(info.event.extendedProps.reccurence)
+        $("#event-recur").html(r);
+        $("#goEditBtn").attr('onclick', 'getEventEdit(' + info.event.id + ')');
+    }
     $("#viewModal").modal('show');
 }
 
+function getReccurenceDays(nums) {
+    var numbers = nums.split(',');
+    var days = "";
+    if (numbers.length == 7) {
+        return "Daily";
+    }
+    $.each(numbers, function (k, v) {
+        switch (v) {
+            case '0':
+                days += 'Monday ';
+                break;
+            case '1':
+                days += 'Tuesday ';
+                break;
+            case '2':
+                days += 'Wednesday ';
+                break;
+            case '3':
+                days += 'Thursday ';
+                break;
+            case '4':
+                days += 'Friday ';
+                break;
+            case '5':
+                days += 'Saturday ';
+                break;
+            case '6':
+                days += 'Sunday ';
+                break;
+        }
+
+    })
+    return days;
+}
+
 function openEditModal(event) {
-    $("#apptId").val(event.id);
-    $("#editTitle").val(event.title);
-    $("#editLocation").val(event.extendedProps.location);
-    $("#editCategory").val(event.extendedProps.category);
-    $("#editDescription").val(event.extendedProps.description);
-    $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
-    $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+    if (event.extendedProps.reccurence == undefined) {
+        $("#apptId").val(event.id);
+        $("#editTitle").val(event.title);
+        $("#editLocation").val(event.extendedProps.location);
+        $("#editCategory").val(event.extendedProps.category);
+        $("#editDescription").val(event.extendedProps.description);
+        $("#editStart").val(moment(event.start).format("M/D/YYYY h:mm A"));
+        $("#editEnd").val(moment(event.end).format("M/D/YYYY h:mm A"));
+        $("#noneedit").prop('checked', true)
+        $("#editendRecur").val('Select Date');
+        $("#recur-box-edit").hide();
+    }
+    else {
+        $("#apptId").val(event.id);
+        $("#editTitle").val(event.title);
+        $("#editLocation").val(event.extendedProps.location);
+        $("#editCategory").val(event.extendedProps.category);
+        $("#editDescription").val(event.extendedProps.description);
+        $("#editStart").val(moment(event.extendedProps.start).format("M/D/YYYY h:mm A"));
+        $("#editEnd").val(moment(event.extendedProps.end).format("M/D/YYYY h:mm A"));
+        $("#editendRecur").val(moment(event.extendedProps.endOfR).format("M/D/YYYY h:mm A"));
+        var r = getReccurenceDays(event.extendedProps.reccurence);
+        if (r == "Daily") {
+            $("#dailyedit").prop('checked', true);
+        } else {
+            //check boxes for days of week and check weekly box
+            $("#weeklyedit").prop('checked', true);
+            checkEditDays(event.extendedProps.reccurence);
+        }
+        $("#recur-box-edit").show();
+
+    }
     $("#editModal").modal('show');
 }
 
+function checkEditDays(nums) {
+    var numbers = nums.split(',');
+    $.each(numbers, function (k, v) {
+
+        switch (v) {
+            case '0':
+                $("#day0checkedit").prop('checked', true);
+                break;
+            case '1':
+                $("#day1checkedit").prop('checked', true);
+                break;
+            case '2':
+                $("#day2checkedit").prop('checked', true);
+                break;
+            case '3':
+                $("#day3checkedit").prop('checked', true);
+                break;
+            case '4':
+                $("#day4checkedit").prop('checked', true);
+                break;
+            case '5':
+                $("#day5checkedit").prop('checked', true);
+                break;
+            case '6':
+                $("#day6checkedit").prop('checked', true);
+                break;
+        }
+
+    })
+
+}
+
 function openDeleteModal(info) {
-    console.log(info.event)
     $("#deleteModal .modal-title").html(info.event.title);
     $("#deleteModalEventId").html(info.event.id);
     $("#deleteModal").modal('show');
@@ -299,11 +469,13 @@ function getEventEdit(id) {
 }
 
 function hideRecurrences() {
-    $('#recur-box').css('visibility', 'hidden')
+    $('#recur-box').hide()
+    $("#recur-box-edit").hide()
 }
 
 function showRecurrences() {
-    $('#recur-box').css('visibility', 'initial')
+    $('#recur-box').show()
+    $("#recur-box-edit").show()
 }
 
 // ******************* PRIVATE ************************ //

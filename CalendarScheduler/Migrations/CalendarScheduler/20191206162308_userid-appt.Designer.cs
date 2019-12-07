@@ -4,14 +4,16 @@ using CalendarScheduler.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalendarScheduler.Migrations.CalendarScheduler
 {
     [DbContext(typeof(CalendarSchedulerContext))]
-    partial class CalendarSchedulerContextModelSnapshot : ModelSnapshot
+    [Migration("20191206162308_userid-appt")]
+    partial class useridappt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +29,6 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BackgroundColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BorderColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")

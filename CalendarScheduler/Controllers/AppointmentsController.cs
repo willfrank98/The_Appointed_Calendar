@@ -51,7 +51,7 @@ namespace CalendarScheduler.Controllers
             }
 
             var appointment = await _context.Appointment
-                .Include(a => a.User)
+                .Where(a => a.UserId == _currentUserId)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {
@@ -73,12 +73,13 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create(String Title, String Location, String Description, String StartTime, String EndTime, String Recurrence, String EndRecurrence)
+        public async Task<JsonResult> Create(String Title, String Location, String Category, String Description, String StartTime, String EndTime, String Recurrence, String EndRecurrence)
         {
             Appointment appointment = new Appointment();
             appointment.Description = Description;
             appointment.Title = Title;
             appointment.Location = Location;
+            appointment.Category = Category;
             appointment.StartTime = DateTime.Parse(StartTime);
             appointment.EndTime = DateTime.Parse(EndTime);
             appointment.UserId = _currentUserId;
@@ -88,6 +89,18 @@ namespace CalendarScheduler.Controllers
                 appointment.EndRecurrence = DateTime.Parse(EndRecurrence);
             else
                 appointment.EndRecurrence = null;
+
+            var color = await _context.Locations.Where(l => l.Name == Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
+            if (color != null)
+                appointment.BackgroundColor = color.Color;
+            else
+                appointment.BackgroundColor = null;
+
+            var border = await _context.Categories.Where(c => c.Name == Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
+            if (border != null)
+                appointment.BorderColor = border.Color;
+            else
+                appointment.BorderColor = null;
 
             if (ModelState.IsValid)
             {
@@ -121,7 +134,7 @@ namespace CalendarScheduler.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location,StartTime,EndTime,Recurrence,EndRecurrence,Created,Modified,UserId")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,Title,Description,Location, Category,StartTime,EndTime,Reccurence,EndRecurrence,Created,Modified,UserId,BackgroundColor,BorderColor")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {
@@ -133,7 +146,21 @@ namespace CalendarScheduler.Controllers
                 try
                 {
                     appointment.UserId = _currentUserId;
-					_context.Appointment.Update(appointment);
+
+                    var color = await _context.Locations.Where(l => l.Name == appointment.Location && l.UserId == _currentUserId).FirstOrDefaultAsync();
+                    if (color != null)
+                        appointment.BackgroundColor = color.Color;
+                    else
+                        appointment.BackgroundColor = null;
+
+
+                    var border = await _context.Categories.Where(c => c.Name == appointment.Category && c.UserId == _currentUserId).FirstOrDefaultAsync();
+                    if (border != null)
+                        appointment.BorderColor = border.Color;
+                    else
+                        appointment.BorderColor = null;
+
+                    _context.Appointment.Update(appointment);
 					await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -162,7 +189,7 @@ namespace CalendarScheduler.Controllers
             }
 
             var appointment = await _context.Appointment
-                .Include(a => a.User)
+                .Where(a => a.UserId == _currentUserId)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {

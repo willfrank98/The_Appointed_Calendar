@@ -4,14 +4,16 @@ using CalendarScheduler.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalendarScheduler.Migrations.CalendarScheduler
 {
     [DbContext(typeof(CalendarSchedulerContext))]
-    partial class CalendarSchedulerContextModelSnapshot : ModelSnapshot
+    [Migration("20191206053055_bgcolor")]
+    partial class bgcolor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +29,6 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BackgroundColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BorderColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
@@ -64,9 +60,11 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AppointmentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Appointment");
                 });
@@ -163,6 +161,13 @@ namespace CalendarScheduler.Migrations.CalendarScheduler
                     b.HasKey("Id");
 
                     b.ToTable("IdentityUser");
+                });
+
+            modelBuilder.Entity("CalendarScheduler.Models.Appointment", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }
