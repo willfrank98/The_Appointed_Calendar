@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		datesRender: function (info) {
 			$.contextMenu({
-				selector: '.fc-day, .fc-day-top',
+                selector: '.fc-day, .fc-day-top, td:not([class])',
 				callback: function (key, options) {
 					//show new appointment modal
 					$('#addModal').modal('show')
