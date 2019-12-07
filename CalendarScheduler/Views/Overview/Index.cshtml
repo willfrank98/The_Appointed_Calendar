@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<h1 class="text-center">The Appointed - Overview</h1>
+<h4 class="text-center">Will Frank | Aaron Templeton | Clyde Gustafson</h4>
+
+<h2>Our Project. What is it?</h2>
+
+<div class="col-8">
+    <p>The Appointed is a calendar based Day Planner web application. It's simple, easy to use, and works well with what it needs to. You can take any appointment, 
+    assign any location and category, then plan it out and go to town. We feel confident that this application could serve use in every day life.</p>
+</div>
+
+<h2>Getting Started</h2>
+
+<div class="col-8">
+    <p>Before we get started with planning the appointments themselves, there are a few pre-requisites we must fulfill.</p>
+    <p>Wouldn't it be nice if you could have a general idea of what the appointment was from a glance? Well we've taken measures to make this a possibility. 
+    There are two objects that can help an appointment stand out. Categories and Locations.
+    An appointment requires that you have both of these, so be sure to create them if they don't already exist.</p>
+</div>
+
+<h4>Categories</h4>
+
+<div class="col-8">
+    <p>A category is the type of appointment. Say you wanted to know if the appointment was a business meeting or a Christmas party or even a family reuinion. 
+    Maybe you want to differentiate between appointments you're looking forward to or appointments you dread. You can create these categories. </p>
+    <p>To create a category, simply navigate to the Categories tab on the nav bar. Once there the process should be self explanatory. Click the create button and you'll be taken to 
+    the creation screen. Here you will be prompted to enter a title and a color. Clicking on the color will pop up a color picker where you can either enter a hex value for the color, 
+    or select from a multitude of choices. If the color doesn't change on the creation screen, we implore you to try again, maybe click on a different portion of the color picker.
+    It's built to work.</p>
+    <p>The category color will show up as the appointment's border.</p>
+</div>
+
+<h4>Locations</h4>
+
+<div class="col-8">
+    <p>A location is whre the appointment will take place. It's recommended to keep the number of locations down to a small amount so you can easily discern what each color represents. 
+    Perhaps you would like a home, work, school and other. Whatever you decide, we give you the option.</p>
+    <p>The creation of a location is the same as a category. Navigate to the Locations page and click the create button. Make your title, select your color etc.</p>
+    <p>The location will show up as the appointment's background color. The location and category will work together in this aspect, so for everyone's sake, don't make them neon.</p>
+</div>
+
+<h2>Using Appointments</h2>
+
+<div class="col-8">
+    <p>Now that we've layed the groundwork, let's get started on actually using our calendar. To begin, navigate to the Calendar page.</p>
+    <p>Right off the bat you should see what options are available as far as the calendar itself is concerned. The default view is a Month view. You can also select a week view or day view.
+    In each view you can navigate to previous or next time periods. The single arrow will increment by 1, the double arrow will increment by 1 year. At any point, you can click the "today"" 
+    button to return to the current day. In the week and day views, you can see a red line that indicates the current time.</p>
+</div>
+
+<h4>Creating an Appointment</h4>
+
+<div class="col-8">
+    <p>To start with, click the Add Appointment button to enter the creation modal. You should see an entry form that must be filled out completely. Any text field left empty after clicking on them 
+    will turn red, indicating a requirement of filling out. When you get to the Start Time and End Time, it's required of you to select both a date and a time from the date picker. Fret not, this 
+    is a simple process.</p>
+    <p>There are three options for recurrences. You can select a Daily recurrence, which means the appointment will repeat itself every day at the specified time. The weekly recurrence requires 
+    you specify which days of the week you'd like for it to recur. Or you can select None, which will make it a one time event. When you elect to choose a recurrence, it's required that you put 
+    a Recurrence End Time to specify when the event should stop recurring.</p>
+</div>
+
+<h4>Viewing an Appointment</h4>
+
+<div class="col-8">
+    <p>Viewing an appointment is as simple as left-clicking on it. A modal will pull up that should show you anything you need to know.</p>
+</div>
+
+<h4>Editing an Appointment</h4>
+
+<div class="col-8">
+    <p>There are multiple methods of editing an appointment.</p>
+    <h5>Edit From View</h5>
+    <p>While in the view modal, there's a big yellow "Edit" button that should take you to the Edit Modal.</p>
+    <h5>Context Menu</h5>
+    <p>Right-Clicking on any appointment will pull up a context menu with two options: Edit and Delete. Click the Edit button to go to the Edit Modal.</p>
+    <h5>Drag n Drop</h5>
+    <p>Holding a Lef-Click on an appointment will allow you to relocate the appointment to any day/time you wish. The precision of moving will depend on which Calendar view you are in.</p>
+    <h5>Resizing</h5>
+    <p>Hover the mouse near the top or bottom edges of an appointment. You should see the cursor change to a resize cursor. Simply drag the appointment down to change the duration of the appointment. 
+    NOTE: This only works in the Day and Week view. It would need to be an All Day event to resize on the month view. </p>
+</div>
+
+<h4>Deleting an Appointment</h4>
+
+<div class="col-8">
+    <p>Simply right-click on any appointment on the calendar to bring up the context menu. Select delete then confirm this is what you want to do.</p>
+</div>
